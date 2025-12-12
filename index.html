@@ -67,854 +67,1043 @@
   
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    html {
-      overflow: hidden;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #0f172a;
-      height: 100dvh; /* Dynamic viewport height for mobile */
-      max-height: 100dvh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      color: #fff;
-      overflow: hidden;
-      position: relative;
-      margin: 0;
-      -webkit-overflow-scrolling: touch;
-    }
-    
-    /* QR Code Pattern Background - Optimized */
-    .qr-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.03;
-      background-image: 
-        repeating-linear-gradient(0deg, transparent, transparent 20px, #fff 20px, #fff 21px),
-        repeating-linear-gradient(90deg, transparent, transparent 20px, #fff 20px, #fff 21px);
-      z-index: 0;
-      will-change: transform;
-    }
-    
-    /* Subtle gradient overlay */
-    .gradient-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                  radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
-      z-index: 1;
-      pointer-events: none;
-    }
-    
-    .maintenance-container {
-      background: rgba(255, 255, 255, 0.04);
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 24px;
-      box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-      padding: 50px 45px;
-      max-width: 600px;
-      width: 100%;
-      max-height: calc(100dvh - 40px);
-      text-align: center;
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      animation: fadeIn 0.6s ease-out;
-      will-change: transform, opacity;
-    }
-    
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .logo-container {
-      position: relative;
-      width: 130px;
-      height: 130px;
-      margin: 0 auto 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    
-    .logo-wrapper {
-      position: relative;
-      width: 130px;
-      height: 130px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .logo-glow {
-      position: absolute;
-      width: 130px;
-      height: 130px;
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-      border-radius: 50%;
-      filter: blur(30px);
-      opacity: 0.5;
-      animation: pulse 3s ease-in-out infinite;
-      will-change: transform, opacity;
-    }
-    
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-        opacity: 0.5;
-      }
-      50% {
-        transform: scale(1.1);
-        opacity: 0.7;
-      }
-    }
-    
-    .logo {
-      position: relative;
-      width: 130px;
-      height: 130px;
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 
-        0 0 50px rgba(99, 102, 241, 0.4),
-        inset 0 0 30px rgba(255, 255, 255, 0.1);
-      overflow: hidden;
-      will-change: transform;
-    }
-    
-    .logo::before {
-      content: '';
-      position: absolute;
-      width: 150%;
-      height: 150%;
-      background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
-      animation: shine 4s linear infinite;
-      will-change: transform;
-    }
-    
-    @keyframes shine {
-      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-    }
-    
-    .logo img {
-      width: 75px;
-      height: 75px;
-      position: relative;
-      z-index: 1;
-      object-fit: contain;
-    }
-    
-    .status-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: white;
-      padding: 8px 22px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-      flex-shrink: 0;
-    }
-    
-    h1 {
-      font-size: 2.4rem;
-      font-weight: 800;
-      margin-bottom: 18px;
-      color: #fff;
-      line-height: 1.2;
-      letter-spacing: -0.5px;
-      flex-shrink: 0;
-    }
-    
-    .subtitle {
-      font-size: 1.1rem;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 32px;
-      line-height: 1.6;
-      font-weight: 400;
-      flex-shrink: 0;
-    }
-    
-    .message {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-left: 3px solid #6366f1;
-      padding: 22px;
-      border-radius: 12px;
-      margin-bottom: 28px;
-      text-align: left;
-      flex-shrink: 1;
-      min-height: 0;
-    }
-    
-    .message p {
-      color: rgba(255, 255, 255, 0.85);
-      line-height: 1.7;
-      margin-bottom: 10px;
-      font-size: 1rem;
-    }
-    
-    .message p:last-child {
-      margin-bottom: 0;
-    }
-    
-    .message p strong {
-      color: #fff;
-      font-weight: 600;
-      font-size: 1.05rem;
-      display: block;
-      margin-bottom: 8px;
-    }
-    
-    .progress-container {
-      margin: 24px 0;
-      flex-shrink: 0;
-    }
-    
-    .progress-label {
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 0.85rem;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 600;
-    }
-    
-    .progress-bar {
-      width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-    }
-    
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
-      border-radius: 10px;
-      width: 65%;
-      animation: progress 2.5s ease-in-out infinite;
-      will-change: width, transform;
-    }
-    
-    @keyframes progress {
-      0% {
-        width: 50%;
-        transform: translateX(0);
-      }
-      50% {
-        width: 75%;
-        transform: translateX(10%);
-      }
-      100% {
-        width: 50%;
-        transform: translateX(30%);
-      }
-    }
-    
-    .contact-info {
-      margin-top: 24px;
-      padding-top: 24px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.03);
-      padding: 22px 24px;
-      border-radius: 12px;
-      flex-shrink: 0;
-    }
-    
-    .contact-info p {
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 12px;
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-    
-    .contact-info p:first-child {
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 10px;
-    }
-    
-    .contact-info a {
-      color: #818cf8;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1.1rem;
-      transition: color 0.2s;
-      display: inline-block;
-    }
-    
-    .contact-info a:hover {
-      color: #a5b4fc;
-    }
-    
-    /* QR Code corner decorators */
-    .qr-corner {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border: 3px solid rgba(255, 255, 255, 0.2);
-      pointer-events: none;
-    }
-    
-    .qr-corner.top-left {
-      top: 20px;
-      left: 20px;
-      border-right: none;
-      border-bottom: none;
-      border-top-left-radius: 8px;
-    }
-    
-    .qr-corner.top-right {
-      top: 20px;
-      right: 20px;
-      border-left: none;
-      border-bottom: none;
-      border-top-right-radius: 8px;
-    }
-    
-    .qr-corner.bottom-left {
-      bottom: 20px;
-      left: 20px;
-      border-right: none;
-      border-top: none;
-      border-bottom-left-radius: 8px;
-    }
-    
-    .qr-corner.bottom-right {
-      bottom: 20px;
-      right: 20px;
-      border-left: none;
-      border-top: none;
-      border-bottom-right-radius: 8px;
-    }
-    
-    /* Mobile Styles */
-    @media (max-width: 768px) {
-      body {
-        padding: 12px;
-      }
-      
-      .qr-background {
-        background-image: 
-          repeating-linear-gradient(0deg, transparent, transparent 15px, #fff 15px, #fff 16px),
-          repeating-linear-gradient(90deg, transparent, transparent 15px, #fff 15px, #fff 16px);
-      }
-      
-      .maintenance-container {
-        padding: 30px 22px;
-        max-height: calc(100dvh - 24px);
-        border-radius: 20px;
-        gap: 0;
-      }
-      
-      .logo-container {
-        width: 100px;
-        height: 100px;
-        margin-bottom: 20px;
-      }
-      
-      .logo-wrapper {
-        width: 100px;
-        height: 100px;
-      }
-      
-      .logo-glow {
-        width: 100px;
-        height: 100px;
-        filter: blur(20px);
-      }
-      
-      .logo {
-        width: 100px;
-        height: 100px;
-        box-shadow: 
-          0 0 30px rgba(99, 102, 241, 0.3),
-          inset 0 0 20px rgba(255, 255, 255, 0.1);
-      }
-      
-      .logo img {
-        width: 60px;
-        height: 60px;
-      }
-      
-      .status-badge {
-        padding: 6px 16px;
-        font-size: 0.65rem;
-        margin-bottom: 16px;
-        letter-spacing: 1px;
-        border-radius: 16px;
-      }
-      
-      h1 {
-        font-size: 1.75rem;
-        margin-bottom: 12px;
-        letter-spacing: -0.3px;
-        line-height: 1.15;
-      }
-      
-      .subtitle {
-        font-size: 0.95rem;
-        margin-bottom: 20px;
-        line-height: 1.5;
-        padding: 0 5px;
-      }
-      
-      .message {
-        padding: 16px;
-        margin-bottom: 18px;
-        border-radius: 10px;
-      }
-      
-      .message p {
-        font-size: 0.875rem;
-        margin-bottom: 8px;
-        line-height: 1.6;
-      }
-      
-      .message p strong {
-        font-size: 0.9rem;
-        margin-bottom: 6px;
-      }
-      
-      .progress-container {
-        margin: 18px 0;
-      }
-      
-      .progress-label {
-        font-size: 0.75rem;
-        margin-bottom: 8px;
-        letter-spacing: 0.5px;
-      }
-      
-      .progress-bar {
-        height: 5px;
-      }
-      
-      .progress-fill {
-        height: 5px;
-      }
-      
-      .contact-info {
-        margin-top: 18px;
-        padding: 16px 18px;
-        border-radius: 10px;
-        border-top-width: 1px;
-        padding-top: 18px;
-      }
-      
-      .contact-info p {
-        font-size: 0.85rem;
-        margin-bottom: 8px;
-        line-height: 1.5;
-      }
-      
-      .contact-info p:first-child {
-        font-size: 0.8rem;
-        margin-bottom: 6px;
-      }
-      
-      .contact-info a {
-        font-size: 0.95rem;
-        word-break: break-all;
-      }
-      
-      .qr-corner {
-        width: 24px;
-        height: 24px;
-        border-width: 2px;
-      }
-      
-      .qr-corner.top-left,
-      .qr-corner.top-right {
-        top: 12px;
-      }
-      
-      .qr-corner.bottom-left,
-      .qr-corner.bottom-right {
-        bottom: 12px;
-      }
-      
-      .qr-corner.top-left,
-      .qr-corner.bottom-left {
-        left: 12px;
-      }
-      
-      .qr-corner.top-right,
-      .qr-corner.bottom-right {
-        right: 12px;
-      }
-      
-      .qr-corner.top-left {
-        border-top-left-radius: 6px;
-      }
-      
-      .qr-corner.top-right {
-        border-top-right-radius: 6px;
-      }
-      
-      .qr-corner.bottom-left {
-        border-bottom-left-radius: 6px;
-      }
-      
-      .qr-corner.bottom-right {
-        border-bottom-right-radius: 6px;
-      }
-    }
-    
-    /* Small Mobile (iPhone SE, etc.) */
-    @media (max-width: 375px) {
-      body {
-        padding: 10px;
-      }
-      
-      .maintenance-container {
-        padding: 25px 18px;
-        max-height: calc(100dvh - 20px);
-        border-radius: 16px;
-      }
-      
-      .logo-container {
-        width: 90px;
-        height: 90px;
-        margin-bottom: 16px;
-      }
-      
-      .logo-wrapper {
-        width: 90px;
-        height: 90px;
-      }
-      
-      .logo-glow {
-        width: 90px;
-        height: 90px;
-      }
-      
-      .logo {
-        width: 90px;
-        height: 90px;
-      }
-      
-      .logo img {
-        width: 55px;
-        height: 55px;
-      }
-      
-      .status-badge {
-        padding: 5px 14px;
-        font-size: 0.6rem;
-        margin-bottom: 14px;
-      }
-      
-      h1 {
-        font-size: 1.5rem;
-        margin-bottom: 10px;
-      }
-      
-      .subtitle {
-        font-size: 0.875rem;
-        margin-bottom: 18px;
-      }
-      
-      .message {
-        padding: 14px;
-        margin-bottom: 16px;
-      }
-      
-      .message p {
-        font-size: 0.8rem;
-      }
-      
-      .message p strong {
-        font-size: 0.85rem;
-      }
-      
-      .contact-info {
-        padding: 14px 16px;
-        margin-top: 16px;
-        padding-top: 16px;
-      }
-      
-      .contact-info p {
-        font-size: 0.8rem;
-      }
-      
-      .contact-info a {
-        font-size: 0.9rem;
-      }
-    }
-    
-    /* Landscape Mobile */
-    @media (max-width: 768px) and (orientation: landscape) {
-      body {
-        padding: 10px;
-      }
-      
-      .maintenance-container {
-        padding: 25px 30px;
-        max-height: calc(100dvh - 20px);
-      }
-      
-      .logo-container {
-        width: 90px;
-        height: 90px;
-        margin-bottom: 14px;
-      }
-      
-      .logo-wrapper {
-        width: 90px;
-        height: 90px;
-      }
-      
-      .logo-glow {
-        width: 90px;
-        height: 90px;
-      }
-      
-      .logo {
-        width: 90px;
-        height: 90px;
-      }
-      
-      .logo img {
-        width: 55px;
-        height: 55px;
-      }
-      
-      .status-badge {
-        padding: 5px 16px;
-        font-size: 0.65rem;
-        margin-bottom: 12px;
-      }
-      
-      h1 {
-        font-size: 1.6rem;
-        margin-bottom: 10px;
-      }
-      
-      .subtitle {
-        font-size: 0.9rem;
-        margin-bottom: 16px;
-      }
-      
-      .message {
-        padding: 14px;
-        margin-bottom: 14px;
-      }
-      
-      .message p {
-        font-size: 0.85rem;
-        margin-bottom: 6px;
-      }
-      
-      .message p strong {
-        font-size: 0.9rem;
-        margin-bottom: 5px;
-      }
-      
-      .progress-container {
-        margin: 14px 0;
-      }
-      
-      .contact-info {
-        margin-top: 14px;
-        padding: 14px 18px;
-        padding-top: 14px;
-      }
-      
-      .contact-info p {
-        font-size: 0.8rem;
-        margin-bottom: 6px;
-      }
-      
-      .contact-info a {
-        font-size: 0.9rem;
-      }
-    }
-    
-    /* Short screens (height optimization) */
-    @media (max-height: 700px) {
-      .logo-container {
-        width: 95px;
-        height: 95px;
-        margin-bottom: 16px;
-      }
-      
-      .logo-wrapper {
-        width: 95px;
-        height: 95px;
-      }
-      
-      .logo-glow {
-        width: 95px;
-        height: 95px;
-      }
-      
-      .logo {
-        width: 95px;
-        height: 95px;
-      }
-      
-      .logo img {
-        width: 58px;
-        height: 58px;
-      }
-      
-      .status-badge {
-        padding: 6px 18px;
-        font-size: 0.75rem;
-        margin-bottom: 14px;
-      }
-      
-      h1 {
-        font-size: 1.9rem;
-        margin-bottom: 10px;
-      }
-      
-      .subtitle {
-        font-size: 0.95rem;
-        margin-bottom: 18px;
-      }
-      
-      .message {
-        padding: 16px;
-        margin-bottom: 18px;
-      }
-      
-      .message p {
-        font-size: 0.9rem;
-        margin-bottom: 7px;
-      }
-      
-      .message p strong {
-        font-size: 0.95rem;
-        margin-bottom: 6px;
-      }
-      
-      .progress-container {
-        margin: 16px 0;
-      }
-      
-      .contact-info {
-        margin-top: 18px;
-        padding: 16px 20px;
-        padding-top: 18px;
-      }
-    }
-    
-    /* Very short screens */
-    @media (max-height: 600px) {
-      body {
-        padding: 8px;
-      }
-      
-      .maintenance-container {
-        padding: 18px 24px;
-      }
-      
-      .logo-container {
-        width: 80px;
-        height: 80px;
-        margin-bottom: 12px;
-      }
-      
-      .logo-wrapper {
-        width: 80px;
-        height: 80px;
-      }
-      
-      .logo-glow {
-        width: 80px;
-        height: 80px;
-      }
-      
-      .logo {
-        width: 80px;
-        height: 80px;
-      }
-      
-      .logo img {
-        width: 50px;
-        height: 50px;
-      }
-      
-      .status-badge {
-        padding: 5px 16px;
-        font-size: 0.7rem;
-        margin-bottom: 10px;
-      }
-      
-      h1 {
-        font-size: 1.6rem;
-        margin-bottom: 8px;
-      }
-      
-      .subtitle {
-        font-size: 0.875rem;
-        margin-bottom: 14px;
-      }
-      
-      .message {
-        padding: 14px;
-        margin-bottom: 14px;
-      }
-      
-      .message p {
-        font-size: 0.85rem;
-        margin-bottom: 6px;
-      }
-      
-      .progress-container {
-        margin: 12px 0;
-      }
-      
-      .contact-info {
-        margin-top: 14px;
-        padding: 14px 18px;
-        padding-top: 14px;
-      }
-    }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  overflow: hidden;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0f172a;
+  height: 100dvh;
+  max-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: #fff;
+  overflow: hidden;
+  position: relative;
+  margin: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* QR Code Pattern Background */
+.qr-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 20px, #fff 20px, #fff 21px),
+    repeating-linear-gradient(90deg, transparent, transparent 20px, #fff 20px, #fff 21px);
+  z-index: 0;
+  will-change: transform;
+}
+
+/* Gradient Overlay */
+.gradient-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Main Container */
+.maintenance-container {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  padding: 50px 45px;
+  max-width: 600px;
+  width: 100%;
+  max-height: calc(100dvh - 40px);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: fadeIn 0.6s ease-out;
+  will-change: transform, opacity;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* QR Code Corner Decorators */
+.qr-corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+.qr-corner.top-left {
+  top: 20px;
+  left: 20px;
+  border-right: none;
+  border-bottom: none;
+  border-top-left-radius: 8px;
+}
+
+.qr-corner.top-right {
+  top: 20px;
+  right: 20px;
+  border-left: none;
+  border-bottom: none;
+  border-top-right-radius: 8px;
+}
+
+.qr-corner.bottom-left {
+  bottom: 20px;
+  left: 20px;
+  border-right: none;
+  border-top: none;
+  border-bottom-left-radius: 8px;
+}
+
+.qr-corner.bottom-right {
+  bottom: 20px;
+  right: 20px;
+  border-left: none;
+  border-top: none;
+  border-bottom-right-radius: 8px;
+}
+
+/* Logo Container */
+.logo-container {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-wrapper {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-glow {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 50%;
+  filter: blur(30px);
+  opacity: 0.5;
+  animation: pulse 3s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+.logo {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 0 50px rgba(99, 102, 241, 0.4),
+    inset 0 0 30px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  will-change: transform;
+}
+
+.logo::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+  animation: shine 4s linear infinite;
+  will-change: transform;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.logo img {
+  width: 75px;
+  height: 75px;
+  position: relative;
+  z-index: 1;
+  object-fit: contain;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 8px 22px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  flex-shrink: 0;
+}
+
+/* Typography */
+h1 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 18px;
+  color: #fff;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 32px;
+  line-height: 1.6;
+  font-weight: 400;
+  flex-shrink: 0;
+}
+
+/* Message Box */
+.message {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 3px solid #6366f1;
+  padding: 22px;
+  border-radius: 12px;
+  margin-bottom: 28px;
+  text-align: left;
+  flex-shrink: 1;
+  min-height: 0;
+}
+
+.message p {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.message p:last-child {
+  margin-bottom: 0;
+}
+
+.message p strong {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.05rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Progress Bar */
+.progress-container {
+  margin: 24px 0;
+  flex-shrink: 0;
+}
+
+.progress-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 10px;
+  width: 65%;
+  animation: progress 2.5s ease-in-out infinite;
+  will-change: width, transform;
+}
+
+@keyframes progress {
+  0% {
+    width: 50%;
+    transform: translateX(0);
+  }
+  50% {
+    width: 75%;
+    transform: translateX(10%);
+  }
+  100% {
+    width: 50%;
+    transform: translateX(30%);
+  }
+}
+
+/* Contact Info */
+.contact-info {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 22px 24px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.contact-info p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.contact-info p:first-child {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 10px;
+}
+
+.contact-info a {
+  color: #818cf8;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+  display: inline-block;
+  word-break: break-all;
+}
+
+.contact-info a:hover {
+  color: #a5b4fc;
+}
+
+/* ============================================
+   RESPONSIVE STYLES
+   ============================================ */
+
+/* Tablet & Small Desktop */
+@media (max-width: 1024px) {
+  .maintenance-container {
+    padding: 40px 35px;
+    max-width: 550px;
+  }
+  
+  .logo-container {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 24px;
+  }
+  
+  .logo-wrapper {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .logo-glow {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .logo {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .logo img {
+    width: 70px;
+    height: 70px;
+  }
+  
+  h1 {
+    font-size: 2.1rem;
+  }
+}
+
+/* Mobile Landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+  body {
+    padding: 10px;
+  }
+  
+  .maintenance-container {
+    padding: 25px 30px;
+    max-height: calc(100dvh - 20px);
+    border-radius: 20px;
+  }
+  
+  .logo-container {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 14px;
+  }
+  
+  .logo-wrapper {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .logo-glow {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .logo {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .logo img {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .status-badge {
+    padding: 5px 16px;
+    font-size: 0.65rem;
+    margin-bottom: 12px;
+  }
+  
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+  }
+  
+  .subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+  
+  .message {
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  
+  .message p {
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+  }
+  
+  .message p strong {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+  
+  .progress-container {
+    margin: 14px 0;
+  }
+  
+  .contact-info {
+    margin-top: 14px;
+    padding: 14px 18px;
+    padding-top: 14px;
+  }
+  
+  .contact-info p {
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+  }
+  
+  .contact-info a {
+    font-size: 0.9rem;
+  }
+  
+  .qr-corner {
+    width: 24px;
+    height: 24px;
+    border-width: 2px;
+  }
+  
+  .qr-corner.top-left,
+  .qr-corner.top-right {
+    top: 12px;
+  }
+  
+  .qr-corner.bottom-left,
+  .qr-corner.bottom-right {
+    bottom: 12px;
+  }
+  
+  .qr-corner.top-left,
+  .qr-corner.bottom-left {
+    left: 12px;
+  }
+  
+  .qr-corner.top-right,
+  .qr-corner.bottom-right {
+    right: 12px;
+  }
+}
+
+/* Mobile Portrait */
+@media (max-width: 768px) {
+  body {
+    padding: 12px;
+  }
+  
+  .qr-background {
+    background-image: 
+      repeating-linear-gradient(0deg, transparent, transparent 15px, #fff 15px, #fff 16px),
+      repeating-linear-gradient(90deg, transparent, transparent 15px, #fff 15px, #fff 16px);
+  }
+  
+  .maintenance-container {
+    padding: 30px 22px;
+    max-height: calc(100dvh - 24px);
+    border-radius: 20px;
+    gap: 0;
+  }
+  
+  .logo-container {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+  }
+  
+  .logo-wrapper {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .logo-glow {
+    width: 100px;
+    height: 100px;
+    filter: blur(20px);
+  }
+  
+  .logo {
+    width: 100px;
+    height: 100px;
+    box-shadow: 
+      0 0 30px rgba(99, 102, 241, 0.3),
+      inset 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+  
+  .logo img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .status-badge {
+    padding: 6px 16px;
+    font-size: 0.65rem;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    border-radius: 16px;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+    line-height: 1.15;
+  }
+  
+  .subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    padding: 0 5px;
+  }
+  
+  .message {
+    padding: 16px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+  }
+  
+  .message p {
+    font-size: 0.875rem;
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+  
+  .message p strong {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  
+  .progress-container {
+    margin: 18px 0;
+  }
+  
+  .progress-label {
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  
+  .progress-bar {
+    height: 5px;
+  }
+  
+  .progress-fill {
+    height: 5px;
+  }
+  
+  .contact-info {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-radius: 10px;
+    border-top-width: 1px;
+    padding-top: 18px;
+  }
+  
+  .contact-info p {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  
+  .contact-info p:first-child {
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+  }
+  
+  .contact-info a {
+    font-size: 0.95rem;
+  }
+  
+  .qr-corner {
+    width: 24px;
+    height: 24px;
+    border-width: 2px;
+  }
+  
+  .qr-corner.top-left,
+  .qr-corner.top-right {
+    top: 12px;
+  }
+  
+  .qr-corner.bottom-left,
+  .qr-corner.bottom-right {
+    bottom: 12px;
+  }
+  
+  .qr-corner.top-left,
+  .qr-corner.bottom-left {
+    left: 12px;
+  }
+  
+  .qr-corner.top-right,
+  .qr-corner.bottom-right {
+    right: 12px;
+  }
+  
+  .qr-corner.top-left {
+    border-top-left-radius: 6px;
+  }
+  
+  .qr-corner.top-right {
+    border-top-right-radius: 6px;
+  }
+  
+  .qr-corner.bottom-left {
+    border-bottom-left-radius: 6px;
+  }
+  
+  .qr-corner.bottom-right {
+    border-bottom-right-radius: 6px;
+  }
+}
+
+/* Small Mobile (iPhone SE, etc.) */
+@media (max-width: 375px) {
+  body {
+    padding: 10px;
+  }
+  
+  .maintenance-container {
+    padding: 25px 18px;
+    max-height: calc(100dvh - 20px);
+    border-radius: 16px;
+  }
+  
+  .logo-container {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 16px;
+  }
+  
+  .logo-wrapper {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .logo-glow {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .logo {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .logo img {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .status-badge {
+    padding: 5px 14px;
+    font-size: 0.6rem;
+    margin-bottom: 14px;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .subtitle {
+    font-size: 0.875rem;
+    margin-bottom: 18px;
+  }
+  
+  .message {
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+  
+  .message p {
+    font-size: 0.8rem;
+  }
+  
+  .message p strong {
+    font-size: 0.85rem;
+  }
+  
+  .progress-container {
+    margin: 16px 0;
+  }
+  
+  .contact-info {
+    padding: 14px 16px;
+    margin-top: 16px;
+    padding-top: 16px;
+  }
+  
+  .contact-info p {
+    font-size: 0.8rem;
+  }
+  
+  .contact-info a {
+    font-size: 0.9rem;
+  }
+}
+
+/* Short Screens (Height Optimization) */
+@media (max-height: 700px) {
+  .logo-container {
+    width: 95px;
+    height: 95px;
+    margin-bottom: 16px;
+  }
+  
+  .logo-wrapper {
+    width: 95px;
+    height: 95px;
+  }
+  
+  .logo-glow {
+    width: 95px;
+    height: 95px;
+  }
+  
+  .logo {
+    width: 95px;
+    height: 95px;
+  }
+  
+  .logo img {
+    width: 58px;
+    height: 58px;
+  }
+  
+  .status-badge {
+    padding: 6px 18px;
+    font-size: 0.75rem;
+    margin-bottom: 14px;
+  }
+  
+  h1 {
+    font-size: 1.9rem;
+    margin-bottom: 10px;
+  }
+  
+  .subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 18px;
+  }
+  
+  .message {
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+  
+  .message p {
+    font-size: 0.9rem;
+    margin-bottom: 7px;
+  }
+  
+  .message p strong {
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+  }
+  
+  .progress-container {
+    margin: 16px 0;
+  }
+  
+  .contact-info {
+    margin-top: 18px;
+    padding: 16px 20px;
+    padding-top: 18px;
+  }
+}
+
+/* Very Short Screens */
+@media (max-height: 600px) {
+  body {
+    padding: 8px;
+  }
+  
+  .maintenance-container {
+    padding: 18px 24px;
+  }
+  
+  .logo-container {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 12px;
+  }
+  
+  .logo-wrapper {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .logo-glow {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .logo {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .logo img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .status-badge {
+    padding: 5px 16px;
+    font-size: 0.7rem;
+    margin-bottom: 10px;
+  }
+  
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+  }
+  
+  .subtitle {
+    font-size: 0.875rem;
+    margin-bottom: 14px;
+  }
+  
+  .message {
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  
+  .message p {
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+  }
+  
+  .progress-container {
+    margin: 12px 0;
+  }
+  
+  .contact-info {
+    margin-top: 14px;
+    padding: 14px 18px;
+    padding-top: 14px;
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 320px) {
+  body {
+    padding: 8px;
+  }
+  
+  .maintenance-container {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+  
+  .logo-container {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 14px;
+  }
+  
+  .logo-wrapper {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .logo-glow {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .logo {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .logo img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .status-badge {
+    padding: 4px 12px;
+    font-size: 0.55rem;
+    margin-bottom: 12px;
+  }
+  
+  h1 {
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+  }
+  
+  .subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 16px;
+  }
+  
+  .message {
+    padding: 12px;
+    margin-bottom: 14px;
+  }
+  
+  .message p {
+    font-size: 0.75rem;
+  }
+  
+  .message p strong {
+    font-size: 0.8rem;
+  }
+  
+  .contact-info {
+    padding: 12px 14px;
+    margin-top: 14px;
+    padding-top: 14px;
+  }
+  
+  .contact-info p {
+    font-size: 0.75rem;
+  }
+  
+  .contact-info a {
+    font-size: 0.85rem;
+  }
+  
+  .qr-corner {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+  }
+  
+  .qr-corner.top-left,
+  .qr-corner.top-right {
+    top: 10px;
+  }
+  
+  .qr-corner.bottom-left,
+  .qr-corner.bottom-right {
+    bottom: 10px;
+  }
+  
+  .qr-corner.top-left,
+  .qr-corner.bottom-left {
+    left: 10px;
+  }
+  
+  .qr-corner.top-right,
+  .qr-corner.bottom-right {
+    right: 10px;
+  }
+}
   </style>
 </head>
 <body>
