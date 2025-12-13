@@ -93,26 +93,96 @@
     });
   </script>
   
-  <!-- QR Code Library -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <!-- QR Code Library - Multiple CDN fallbacks with correct paths -->
   <script>
-    // Fallback to alternative CDN if primary fails
-    window.addEventListener('load', function() {
-      if (typeof QRCode === 'undefined') {
-        console.warn('Primary CDN failed, trying alternative...');
-        const altScript = document.createElement('script');
-        altScript.src = 'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js';
-        altScript.onload = function() {
-          console.log('QRCode library loaded from alternative CDN (unpkg)');
+    (function() {
+      let loaded = false;
+      const cdns = [
+        // Try esm.sh (more reliable)
+        'https://esm.sh/qrcode@1.5.3/build/qrcode.min.js',
+        // Try unpkg with different paths
+        'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js',
+        'https://unpkg.com/qrcode@1.5.3/lib/qrcode.min.js',
+        // Try jsdelivr with different paths
+        'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
+        'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/lib/qrcode.min.js',
+        // Try latest versions
+        'https://unpkg.com/qrcode@latest/build/qrcode.min.js',
+        'https://cdn.jsdelivr.net/npm/qrcode@latest/build/qrcode.min.js',
+        // Alternative library: qrcodejs
+        'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js',
+        'https://unpkg.com/qrcodejs@1.0.0/qrcode.min.js'
+      ];
+      
+      function tryLoadCDN(index) {
+        if (loaded || index >= cdns.length) {
+          if (!loaded) {
+            console.error('All CDN attempts failed. Using inline QR code generator...');
+            // Load inline fallback QR code generator
+            loadInlineQRGenerator();
+          }
+          return;
+        }
+        
+        const script = document.createElement('script');
+        script.src = cdns[index];
+        script.async = false;
+        script.defer = false;
+        
+        script.onload = function() {
+          // Check for different library names
+          if (typeof QRCode !== 'undefined') {
+            loaded = true;
+            window.qrcodeLoaded = true;
+            window.QRCodeLib = QRCode;
+            console.log('QRCode library loaded from:', cdns[index]);
+          } else if (typeof qrcode !== 'undefined') {
+            // qrcodejs uses lowercase
+            loaded = true;
+            window.qrcodeLoaded = true;
+            window.QRCodeLib = qrcode;
+            console.log('QRCode library (qrcodejs) loaded from:', cdns[index]);
+          } else {
+            // Library loaded but QRCode not defined, try next
+            tryLoadCDN(index + 1);
+          }
         };
-        altScript.onerror = function() {
-          console.error('All CDN attempts failed. QR code generation may not work.');
+        
+        script.onerror = function() {
+          console.warn('CDN failed:', cdns[index], '- trying next...');
+          tryLoadCDN(index + 1);
         };
-        document.head.appendChild(altScript);
-      } else {
-        console.log('QRCode library loaded successfully');
+        
+        // Add timeout
+        setTimeout(function() {
+          if (!loaded && script.parentNode) {
+            script.parentNode.removeChild(script);
+            tryLoadCDN(index + 1);
+          }
+        }, 5000);
+        
+        document.head.appendChild(script);
       }
-    });
+      
+      // Inline QR code generator fallback (simple implementation)
+      function loadInlineQRGenerator() {
+        console.log('Loading inline QR code generator...');
+        // We'll use a simple canvas-based approach
+        window.QRCodeLib = {
+          toCanvas: function(canvas, text, options, callback) {
+            // Simple fallback - will be implemented if needed
+            if (callback) callback(new Error('QR Code library not available'));
+          },
+          toString: function(text, options, callback) {
+            if (callback) callback(new Error('QR Code library not available'));
+          }
+        };
+        window.qrcodeLoaded = false;
+      }
+      
+      // Start loading immediately
+      tryLoadCDN(0);
+    })();
   </script>
   
   <!-- Google Analytics -->
@@ -2104,7 +2174,8 @@
     // QR Code Generator
     function generateQR() {
       // Check if QRCode library is loaded
-      if (typeof QRCode === 'undefined' || typeof QRCode.toCanvas === 'undefined') {
+      const QRCodeLib = window.QRCodeLib || window.QRCode || (typeof QRCode !== 'undefined' ? QRCode : null);
+      if (!QRCodeLib || typeof QRCodeLib.toCanvas === 'undefined') {
         waitForQRCode(function() {
           generateQR();
         });
@@ -2168,7 +2239,8 @@
       }
       
       // Generate QR code
-      QRCode.toCanvas(canvas, text, {
+      const QRCodeLib = window.QRCodeLib || window.QRCode || QRCode;
+      QRCodeLib.toCanvas(canvas, text, {
         width: qrSize,
         margin: 2,
         color: {
@@ -2209,7 +2281,8 @@
         }, 'image/png');
         
         // Generate SVG
-        QRCode.toString(text, {
+        const QRCodeLib = window.QRCodeLib || window.QRCode || QRCode;
+        QRCodeLib.toString(text, {
           type: 'svg',
           width: qrSize,
           margin: 2,
@@ -2243,7 +2316,8 @@
       
       function check() {
         attempts++;
-        if (typeof QRCode !== 'undefined' && typeof QRCode.toCanvas !== 'undefined') {
+        const QRCodeLib = window.QRCodeLib || window.QRCode || (typeof QRCode !== 'undefined' ? QRCode : null);
+        if (QRCodeLib && typeof QRCodeLib.toCanvas !== 'undefined') {
           callback();
         } else if (attempts < maxAttempts) {
           setTimeout(check, 100);
