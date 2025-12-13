@@ -16,13 +16,13 @@
   <meta property="og:description" content="We're upgrading PrismioQR with powerful new features! Back in 3-4 days with enhanced performance and new capabilities.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://prismioqr.com/">
-  <meta property="og:image" content="https://prismioqr.com/assets/logo.png">
+  <meta property="og:image" content="https://prismioqr.com/logo.png">
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="PrismioQR - Major Upgrade in Progress">
   <meta name="twitter:description" content="We're upgrading PrismioQR with powerful new features! Back in 3-4 days.">
-  <meta name="twitter:image" content="https://prismioqr.com/assets/logo.png">
+  <meta name="twitter:image" content="https://prismioqr.com/logo.png">
   
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -116,7 +116,9 @@
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #1a1a2e 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
       height: 100dvh;
       max-height: 100dvh;
       display: flex;
@@ -128,6 +130,12 @@
       position: relative;
       margin: 0;
       -webkit-overflow-scrolling: touch;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     /* Animated Background */
@@ -159,9 +167,9 @@
       width: 100%;
       height: 100%;
       background: 
-        radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.25) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+        radial-gradient(circle at 20% 30%, rgba(83, 52, 131, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(15, 52, 96, 0.2) 0%, transparent 70%);
       z-index: 1;
       pointer-events: none;
       animation: gradientPulse 8s ease-in-out infinite;
@@ -226,7 +234,8 @@
       z-index: 2;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
+      gap: 0;
       animation: fadeInUp 0.8s ease-out;
       overflow-y: auto;
       overflow-x: hidden;
@@ -498,10 +507,11 @@
       border-left: 4px solid #6366f1;
       padding: 28px;
       border-radius: 16px;
-      margin-bottom: 32px;
+      margin-bottom: 48px;
+      margin-top: 0;
       text-align: left;
-      flex-shrink: 1;
-      min-height: 0;
+      flex-shrink: 0;
+      min-height: auto;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     }
 
@@ -528,15 +538,33 @@
       background-clip: text;
     }
 
+    .message ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 12px;
+      margin-bottom: 0;
+    }
+
+    .message ul li {
+      margin-bottom: 10px;
+      padding-left: 0;
+    }
+
+    .message ul li:last-child {
+      margin-bottom: 0;
+    }
+
     /* Features List */
     .features-list {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
       padding: 24px;
-      margin-bottom: 28px;
+      margin-bottom: 32px;
+      margin-top: 0;
       text-align: left;
       flex-shrink: 0;
+      clear: both;
     }
 
     .features-list h3 {
@@ -573,45 +601,106 @@
     }
 
     .progress-label {
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 0.9rem;
-      margin-bottom: 12px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-percentage {
+      color: #a5b4fc;
+      font-size: 0.85rem;
       font-weight: 700;
+      letter-spacing: 1px;
     }
 
     .progress-bar {
       width: 100%;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
+      height: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 20px;
       overflow: hidden;
       position: relative;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: 
+        inset 0 2px 8px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
-      border-radius: 12px;
-      width: 70%;
-      animation: progress 3s ease-in-out infinite;
-      box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+      background: linear-gradient(90deg, 
+        #6366f1 0%, 
+        #8b5cf6 25%, 
+        #a855f7 50%, 
+        #06b6d4 75%, 
+        #6366f1 100%);
+      background-size: 200% 100%;
+      border-radius: 20px;
+      width: 65%;
+      transition: width 0.3s ease-out;
+      animation: 
+        progressGradient 3s linear infinite,
+        progressGlow 2s ease-in-out infinite;
+      box-shadow: 
+        0 0 20px rgba(99, 102, 241, 0.6),
+        0 0 40px rgba(139, 92, 246, 0.4),
+        inset 0 0 10px rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
     }
 
-    @keyframes progress {
+    .progress-fill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.4) 50%, 
+        transparent 100%);
+      animation: progressShine 2s ease-in-out infinite;
+    }
+
+    /* Progress width is controlled by JavaScript */
+
+    @keyframes progressGradient {
       0% {
-        width: 60%;
-        transform: translateX(0);
-      }
-      50% {
-        width: 80%;
-        transform: translateX(5%);
+        background-position: 0% 50%;
       }
       100% {
-        width: 60%;
-        transform: translateX(10%);
+        background-position: 200% 50%;
+      }
+    }
+
+    @keyframes progressGlow {
+      0%, 100% {
+        box-shadow: 
+          0 0 20px rgba(99, 102, 241, 0.6),
+          0 0 40px rgba(139, 92, 246, 0.4),
+          inset 0 0 10px rgba(255, 255, 255, 0.2);
+      }
+      50% {
+        box-shadow: 
+          0 0 30px rgba(99, 102, 241, 0.8),
+          0 0 60px rgba(139, 92, 246, 0.6),
+          inset 0 0 15px rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    @keyframes progressShine {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 100%;
       }
     }
 
@@ -797,7 +886,16 @@
       
       .message {
         padding: 18px;
-        margin-bottom: 18px;
+        margin-bottom: 32px;
+        margin-top: 0;
+        flex-shrink: 0;
+      }
+      
+      .features-list {
+        margin-bottom: 28px;
+        margin-top: 0;
+        flex-shrink: 0;
+        clear: both;
       }
       
       .features-grid {
@@ -807,7 +905,7 @@
       
       .contact-info {
         padding: 18px 20px;
-        margin-top: 20px;
+        margin-top: 28px;
         padding-top: 20px;
       }
     }
@@ -903,7 +1001,9 @@
       
       .message {
         padding: 20px;
-        margin-bottom: 24px;
+        margin-bottom: 36px;
+        margin-top: 0;
+        flex-shrink: 0;
       }
       
       .message p {
@@ -916,9 +1016,20 @@
         margin-bottom: 8px;
       }
       
+      .message ul {
+        margin-top: 10px;
+      }
+      
+      .message ul li {
+        margin-bottom: 8px;
+      }
+      
       .features-list {
         padding: 20px;
-        margin-bottom: 24px;
+        margin-bottom: 32px;
+        margin-top: 0;
+        flex-shrink: 0;
+        clear: both;
       }
       
       .features-grid {
@@ -939,12 +1050,21 @@
         margin-bottom: 10px;
       }
       
+      .progress-label {
+        font-size: 0.85rem;
+        margin-bottom: 12px;
+      }
+      
+      .progress-percentage {
+        font-size: 0.75rem;
+      }
+      
       .progress-bar {
-        height: 6px;
+        height: 10px;
       }
       
       .progress-fill {
-        height: 6px;
+        height: 10px;
       }
       
       .contact-info {
@@ -1078,7 +1198,9 @@
       
       .message {
         padding: 16px;
-        margin-bottom: 20px;
+        margin-bottom: 32px;
+        margin-top: 0;
+        flex-shrink: 0;
       }
       
       .message p {
@@ -1089,9 +1211,20 @@
         font-size: 0.95rem;
       }
       
+      .message ul {
+        margin-top: 10px;
+      }
+      
+      .message ul li {
+        margin-bottom: 8px;
+      }
+      
       .features-list {
         padding: 16px;
-        margin-bottom: 20px;
+        margin-bottom: 28px;
+        margin-top: 0;
+        flex-shrink: 0;
+        clear: both;
       }
       
       .contact-info {
@@ -1159,7 +1292,16 @@
       
       .message {
         padding: 18px;
-        margin-bottom: 20px;
+        margin-bottom: 32px;
+        margin-top: 0;
+        flex-shrink: 0;
+      }
+      
+      .features-list {
+        margin-bottom: 28px;
+        margin-top: 0;
+        flex-shrink: 0;
+        clear: both;
       }
     }
 
@@ -1221,15 +1363,24 @@
       
       .message {
         padding: 14px;
-        margin-bottom: 16px;
+        margin-bottom: 28px;
+        margin-top: 0;
+        flex-shrink: 0;
+      }
+      
+      .features-list {
+        margin-bottom: 24px;
+        margin-top: 0;
+        flex-shrink: 0;
+        clear: both;
       }
       
       .progress-container {
-        margin: 16px 0;
+        margin: 24px 0;
       }
       
       .contact-info {
-        margin-top: 16px;
+        margin-top: 24px;
         padding: 16px 20px;
         padding-top: 16px;
       }
@@ -1263,7 +1414,7 @@
       <div class="logo-wrapper">
         <div class="logo-glow"></div>
         <div class="logo">
-          <img src="./assets/icon.svg" alt="PrismioQR Logo">
+          <img src="./icon.svg" alt="PrismioQR Logo">
         </div>
       </div>
     </div>
@@ -1299,11 +1450,11 @@
     <div class="message">
       <p><strong>🚀 What's Coming?</strong></p>
       <p>We're implementing major improvements including:</p>
-      <ul style="list-style: none; padding-left: 0; margin-top: 12px;">
-        <li style="margin-bottom: 8px;">✨ Enhanced performance & speed</li>
-        <li style="margin-bottom: 8px;">🎨 New customization options</li>
-        <li style="margin-bottom: 8px;">📊 Improved analytics dashboard</li>
-        <li style="margin-bottom: 8px;">🔒 Advanced security features</li>
+      <ul>
+        <li>✨ Enhanced performance & speed</li>
+        <li>🎨 New customization options</li>
+        <li>📊 Improved analytics dashboard</li>
+        <li>🔒 Advanced security features</li>
         <li>⚡ Better user experience</li>
       </ul>
     </div>
@@ -1322,9 +1473,12 @@
     </div>
     
     <div class="progress-container">
-      <div class="progress-label">Upgrade Progress</div>
+      <div class="progress-label">
+        <span>Upgrade Progress</span>
+        <span class="progress-percentage" id="progress-percentage">72%</span>
+      </div>
       <div class="progress-bar">
-        <div class="progress-fill"></div>
+        <div class="progress-fill" id="progress-fill"></div>
       </div>
     </div>
     
@@ -1341,15 +1495,11 @@
     
     <!-- Social Links -->
     <div class="social-links">
-      <a href="https://twitter.com/prismioqr" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Twitter">
+      <a href="https://twitter.com/PrismioQR" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Twitter">
         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
       </a>
-      <a href="https://www.linkedin.com/company/prismioqr" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
-        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-      </a>
-      <a href="https://github.com/batuhanilgarr/prismioqr" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
-        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-      </a>
+
+
       <a href="https://www.producthunt.com/posts/prismioqr" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Product Hunt">
         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13.604 8.4h-3.405V12h3.405c.995 0 1.801-.806 1.801-1.801 0-.993-.805-1.799-1.801-1.799zM12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm1.604 14.4h-3.405V18H7.801V6h5.804c2.319 0 4.2 1.88 4.2 4.199 0 2.32-1.881 4.201-4.201 4.201z"/></svg>
       </a>
@@ -1368,9 +1518,14 @@
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
 
-      document.getElementById('days').textContent = days;
-      document.getElementById('hours').textContent = hours;
-      document.getElementById('minutes').textContent = minutes;
+      // Ensure elements exist before updating
+      const daysEl = document.getElementById('days');
+      const hoursEl = document.getElementById('hours');
+      const minutesEl = document.getElementById('minutes');
+      
+      if (daysEl) daysEl.textContent = Math.max(0, days);
+      if (hoursEl) hoursEl.textContent = Math.max(0, hours);
+      if (minutesEl) minutesEl.textContent = Math.max(0, minutes);
 
       if (distance < 0) {
         document.getElementById('days').textContent = '0';
@@ -1379,8 +1534,45 @@
       }
     }
 
+    // Update immediately on page load
     updateCountdown();
-    setInterval(updateCountdown, 60000); // Update every minute
+    // Update every second for real-time countdown
+    setInterval(updateCountdown, 1000);
+
+    // Progress Bar Animation
+    function updateProgress() {
+      const progressFill = document.getElementById('progress-fill');
+      const progressPercentage = document.getElementById('progress-percentage');
+      
+      if (!progressFill || !progressPercentage) return;
+      
+      // Animate progress from 65% to 78% and back
+      let currentProgress = 65;
+      let direction = 1;
+      const speed = 0.15; // Adjust speed here
+      
+      function animate() {
+        currentProgress += speed * direction;
+        
+        if (currentProgress >= 78) {
+          currentProgress = 78;
+          direction = -1;
+        } else if (currentProgress <= 65) {
+          currentProgress = 65;
+          direction = 1;
+        }
+        
+        progressFill.style.width = currentProgress + '%';
+        progressPercentage.textContent = Math.round(currentProgress) + '%';
+        
+        requestAnimationFrame(animate);
+      }
+      
+      animate();
+    }
+
+    // Start progress animation
+    updateProgress();
 
     // Track time spent on maintenance page
     const startTime = Date.now();
