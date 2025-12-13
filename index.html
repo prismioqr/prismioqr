@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="robots" content="noindex, nofollow">
   
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="alternate icon" href="./icon.svg">
+  
   <!-- SEO Meta Tags -->
   <title>PrismioQR Under Maintenance - Major Upgrade in Progress | Free QR Code Generator</title>
   <meta name="description" content="PrismioQR is undergoing a major upgrade! We're adding powerful new features including enhanced analytics, improved performance, and more QR code types. We'll be back in 3-4 days with an even better experience.">
@@ -90,32 +94,25 @@
   </script>
   
   <!-- QR Code Library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script>
-    // Load QRCode library dynamically
-    (function() {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
-      script.async = false;
-      script.defer = false;
-      script.onload = function() {
-        window.qrcodeLoaded = true;
-        console.log('QRCode library loaded successfully');
-      };
-      script.onerror = function() {
-        console.error('Failed to load QRCode library');
-        // Try alternative CDN
+    // Fallback to alternative CDN if primary fails
+    window.addEventListener('load', function() {
+      if (typeof QRCode === 'undefined') {
+        console.warn('Primary CDN failed, trying alternative...');
         const altScript = document.createElement('script');
         altScript.src = 'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js';
-        altScript.async = false;
-        altScript.defer = false;
         altScript.onload = function() {
-          window.qrcodeLoaded = true;
-          console.log('QRCode library loaded from alternative CDN');
+          console.log('QRCode library loaded from alternative CDN (unpkg)');
+        };
+        altScript.onerror = function() {
+          console.error('All CDN attempts failed. QR code generation may not work.');
         };
         document.head.appendChild(altScript);
-      };
-      document.head.appendChild(script);
-    })();
+      } else {
+        console.log('QRCode library loaded successfully');
+      }
+    });
   </script>
   
   <!-- Google Analytics -->
