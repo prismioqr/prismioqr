@@ -16,13 +16,18 @@
   <meta property="og:description" content="We're upgrading PrismioQR with powerful new features! Back in 3-4 days with enhanced performance and new capabilities.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://prismioqr.com/">
-  <meta property="og:image" content="https://prismioqr.com/logo.png">
+  <meta property="og:image" content="https://prismioqr.com/assets/logo.png">
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="PrismioQR - Major Upgrade in Progress">
   <meta name="twitter:description" content="We're upgrading PrismioQR with powerful new features! Back in 3-4 days.">
-  <meta name="twitter:image" content="https://prismioqr.com/logo.png">
+  <meta name="twitter:image" content="https://prismioqr.com/assets/logo.png">
+  
+  <!-- Google Fonts - Montserrat & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -84,6 +89,9 @@
     });
   </script>
   
+  <!-- QR Code Library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GGN0HTKD2T"></script>
   <script>
@@ -99,7 +107,7 @@
   </script>
   
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    /* Google Fonts loaded in <head> */
 
     * {
       margin: 0;
@@ -115,10 +123,13 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #1a1a2e 100%);
-      background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
+      font-family: 'Montserrat', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: 
+        linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 20%, #16213e 40%, #0f3460 60%, #533483 80%, #0a0a0f 100%),
+        radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+      background-size: 400% 400%, 100% 100%, 100% 100%;
+      animation: gradientShift 20s ease infinite;
       height: 100dvh;
       max-height: 100dvh;
       display: flex;
@@ -133,9 +144,9 @@
     }
 
     @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      0% { background-position: 0% 50%, 0% 0%, 0% 0%; }
+      50% { background-position: 100% 50%, 0% 0%, 0% 0%; }
+      100% { background-position: 0% 50%, 0% 0%, 0% 0%; }
     }
 
     /* Animated Background */
@@ -167,12 +178,13 @@
       width: 100%;
       height: 100%;
       background: 
-        radial-gradient(circle at 20% 30%, rgba(83, 52, 131, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(15, 52, 96, 0.2) 0%, transparent 70%);
+        radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.15) 0%, transparent 70%),
+        linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.05) 50%, transparent 100%);
       z-index: 1;
       pointer-events: none;
-      animation: gradientPulse 8s ease-in-out infinite;
+      animation: gradientPulse 10s ease-in-out infinite;
     }
 
     @keyframes gradientPulse {
@@ -216,15 +228,18 @@
 
     /* Main Container */
     .maintenance-container {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(40px);
-      -webkit-backdrop-filter: blur(40px);
-      border: 2px solid rgba(99, 102, 241, 0.3);
+      background: 
+        linear-gradient(135deg, rgba(15, 15, 25, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%),
+        rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(50px) saturate(180%);
+      -webkit-backdrop-filter: blur(50px) saturate(180%);
+      border: 2px solid rgba(99, 102, 241, 0.4);
       border-radius: 32px;
       box-shadow: 
-        0 25px 80px rgba(0, 0, 0, 0.5),
+        0 25px 80px rgba(0, 0, 0, 0.6),
         0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-        0 0 60px rgba(99, 102, 241, 0.2);
+        0 0 80px rgba(99, 102, 241, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
       padding: 60px 50px;
       max-width: 700px;
       width: 100%;
@@ -384,6 +399,7 @@
       position: relative;
       z-index: 1;
       object-fit: contain;
+      filter: brightness(0) invert(1);
       animation: logoFloat 3s ease-in-out infinite;
     }
 
@@ -416,23 +432,54 @@
       50% { transform: scale(1.05); }
     }
 
-    /* Countdown Timer */
+    /* Countdown Timer - Tech Enhanced */
     .countdown-container {
-      background: rgba(99, 102, 241, 0.15);
-      border: 2px solid rgba(99, 102, 241, 0.3);
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 28px;
+      background: 
+        linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(6, 182, 212, 0.15) 100%),
+        rgba(15, 15, 25, 0.6);
+      border: 2px solid rgba(99, 102, 241, 0.4);
+      border-radius: 24px;
+      padding: 28px;
+      margin-bottom: 32px;
       flex-shrink: 0;
+      box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+        0 0 50px rgba(99, 102, 241, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .countdown-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent);
+      animation: countdownScan 3s ease-in-out infinite;
+    }
+
+    @keyframes countdownScan {
+      0% { left: -100%; }
+      100% { left: 100%; }
     }
 
     .countdown-label {
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 12px;
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 16px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #a5b4fc 0%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 0 20px rgba(165, 180, 252, 0.3);
     }
 
     .countdown-timer {
@@ -443,31 +490,66 @@
     }
 
     .countdown-item {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      padding: 12px 16px;
-      min-width: 70px;
+      background: 
+        linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%),
+        rgba(15, 15, 25, 0.8);
+      border: 2px solid rgba(99, 102, 241, 0.4);
+      border-radius: 16px;
+      padding: 16px 20px;
+      min-width: 80px;
+      box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 20px rgba(99, 102, 241, 0.2);
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s;
+    }
+
+    .countdown-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 30px rgba(99, 102, 241, 0.3);
+      border-color: rgba(99, 102, 241, 0.6);
     }
 
     .countdown-number {
-      font-size: 2rem;
-      font-weight: 800;
+      font-size: 2.2rem;
+      font-weight: 900;
       color: #fff;
       line-height: 1;
-      margin-bottom: 4px;
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -1px;
+      animation: numberPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes numberPulse {
+      0%, 100% { 
+        filter: brightness(1);
+        transform: scale(1);
+      }
+      50% { 
+        filter: brightness(1.2);
+        transform: scale(1.05);
+      }
     }
 
     .countdown-unit {
-      font-size: 0.7rem;
-      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.75rem;
+      color: rgba(165, 180, 252, 0.9);
       text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 600;
+      letter-spacing: 2px;
+      font-weight: 700;
+      margin-top: 4px;
+      text-shadow: 0 0 10px rgba(165, 180, 252, 0.3);
     }
 
     /* Typography - Enhanced */
@@ -591,6 +673,218 @@
     .feature-item::before {
       content: '✨';
       font-size: 1.2rem;
+    }
+
+    /* Simple QR Generator - Tech Enhanced */
+    .qr-generator {
+      background: 
+        linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(6, 182, 212, 0.1) 100%),
+        rgba(15, 15, 25, 0.6);
+      border: 2px solid rgba(99, 102, 241, 0.4);
+      border-radius: 24px;
+      padding: 36px;
+      margin-bottom: 36px;
+      margin-top: 0;
+      text-align: center;
+      flex-shrink: 0;
+      clear: both;
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+        0 0 40px rgba(99, 102, 241, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .qr-generator::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.1) 50%, transparent 70%);
+      animation: techScan 8s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes techScan {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .qr-generator h3 {
+      color: #fff;
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+      letter-spacing: -0.5px;
+    }
+
+    .qr-generator p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+
+    .qr-generator-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .qr-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .qr-input-group label {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .qr-input-group input {
+      background: rgba(15, 15, 25, 0.8);
+      border: 2px solid rgba(99, 102, 241, 0.4);
+      border-radius: 14px;
+      padding: 14px 18px;
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s;
+      font-family: 'Montserrat', 'Poppins', sans-serif;
+      position: relative;
+      z-index: 1;
+      box-shadow: 
+        inset 0 2px 8px rgba(0, 0, 0, 0.3),
+        0 0 0 0 rgba(99, 102, 241, 0);
+    }
+
+    .qr-input-group input:focus {
+      outline: none;
+      border-color: rgba(99, 102, 241, 0.8);
+      background: rgba(15, 15, 25, 0.9);
+      box-shadow: 
+        inset 0 2px 8px rgba(0, 0, 0, 0.3),
+        0 0 0 3px rgba(99, 102, 241, 0.2),
+        0 0 30px rgba(99, 102, 241, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .qr-input-group input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .qr-generate-btn {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+      background-size: 200% 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 16px 32px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.5),
+        0 0 0 0 rgba(99, 102, 241, 0);
+      font-family: 'Montserrat', 'Poppins', sans-serif;
+      position: relative;
+      z-index: 1;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      animation: buttonGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes buttonGlow {
+      0%, 100% {
+        box-shadow: 
+          0 6px 20px rgba(99, 102, 241, 0.5),
+          0 0 0 0 rgba(99, 102, 241, 0);
+      }
+      50% {
+        box-shadow: 
+          0 8px 30px rgba(99, 102, 241, 0.7),
+          0 0 20px rgba(139, 92, 246, 0.4);
+      }
+    }
+
+    .qr-generate-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 
+        0 10px 35px rgba(99, 102, 241, 0.6),
+        0 0 30px rgba(139, 92, 246, 0.5);
+      background-position: 100% 0;
+    }
+
+    .qr-generate-btn:active {
+      transform: translateY(-1px) scale(1);
+    }
+
+    .qr-generate-btn:active {
+      transform: translateY(0);
+    }
+
+    .qr-result {
+      margin-top: 24px;
+      display: none;
+    }
+
+    .qr-result.show {
+      display: block;
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    .qr-code-display {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(99, 102, 241, 0.3);
+      border-radius: 16px;
+      padding: 24px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+
+    .qr-code-display canvas {
+      border-radius: 8px;
+      background: #fff;
+      padding: 12px;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .qr-download-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(99, 102, 241, 0.3);
+      border-radius: 12px;
+      padding: 10px 20px;
+      color: #a5b4fc;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+      margin: 4px;
+      font-family: 'Montserrat', 'Poppins', sans-serif;
+    }
+
+    .qr-download-btn:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: rgba(99, 102, 241, 0.5);
+      color: #c7d2fe;
+      transform: translateY(-2px);
     }
 
     /* Enhanced Progress Bar */
@@ -902,6 +1196,19 @@
         gap: 10px;
       }
       
+      .qr-generator {
+        padding: 24px;
+        margin-bottom: 28px;
+      }
+      
+      .qr-generator h3 {
+        font-size: 1.1rem;
+      }
+      
+      .qr-generator-form {
+        max-width: 100%;
+      }
+      
       .contact-info {
         padding: 18px 20px;
         margin-top: 28px;
@@ -1038,6 +1345,50 @@
       
       .feature-item {
         font-size: 0.85rem;
+      }
+      
+      .qr-generator {
+        padding: 24px 20px;
+        margin-bottom: 32px;
+      }
+      
+      .qr-generator h3 {
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+      }
+      
+      .qr-generator p {
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+      }
+      
+      .qr-input-group label {
+        font-size: 0.85rem;
+      }
+      
+      .qr-input-group input {
+        padding: 10px 14px;
+        font-size: 0.95rem;
+      }
+      
+      .qr-generate-btn {
+        padding: 12px 24px;
+        font-size: 0.95rem;
+      }
+      
+      .qr-code-display {
+        padding: 16px;
+      }
+      
+      .qr-code-display canvas {
+        max-width: 200px;
+        height: auto;
+      }
+      
+      .qr-download-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        margin: 4px 2px;
       }
       
       .progress-container {
@@ -1226,6 +1577,47 @@
         clear: both;
       }
       
+      .qr-generator {
+        padding: 20px 16px;
+        margin-bottom: 28px;
+      }
+      
+      .qr-generator h3 {
+        font-size: 1rem;
+      }
+      
+      .qr-generator p {
+        font-size: 0.8rem;
+        margin-bottom: 18px;
+      }
+      
+      .qr-input-group input {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+      }
+      
+      .qr-generate-btn {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+      }
+      
+      .qr-code-display {
+        padding: 14px;
+      }
+      
+      .qr-code-display canvas {
+        width: 180px !important;
+        height: 180px !important;
+      }
+      
+      .qr-download-btn {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+        display: block;
+        margin: 6px auto;
+        max-width: 150px;
+      }
+      
       .contact-info {
         padding: 18px 20px;
         margin-top: 20px;
@@ -1302,6 +1694,16 @@
         flex-shrink: 0;
         clear: both;
       }
+      
+      .qr-generator {
+        padding: 20px;
+        margin-bottom: 24px;
+      }
+      
+      .qr-code-display canvas {
+        max-width: 180px;
+        height: auto;
+      }
     }
 
     @media (max-height: 600px) {
@@ -1374,12 +1776,53 @@
         clear: both;
       }
       
+      .qr-generator {
+        padding: 16px;
+        margin-bottom: 20px;
+      }
+      
+      .qr-generator h3 {
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+      }
+      
+      .qr-generator p {
+        font-size: 0.75rem;
+        margin-bottom: 14px;
+      }
+      
+      .qr-input-group input {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+      }
+      
+      .qr-generate-btn {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+      }
+      
+      .qr-code-display {
+        padding: 10px;
+      }
+      
+      .qr-code-display canvas {
+        max-width: 140px;
+        height: auto;
+      }
+      
+      .qr-download-btn {
+        padding: 6px 12px;
+        font-size: 0.7rem;
+        margin: 4px auto;
+        max-width: 120px;
+      }
+      
       .progress-container {
-        margin: 24px 0;
+        margin: 20px 0;
       }
       
       .contact-info {
-        margin-top: 24px;
+        margin-top: 20px;
         padding: 16px 20px;
         padding-top: 16px;
       }
@@ -1413,7 +1856,7 @@
       <div class="logo-wrapper">
         <div class="logo-glow"></div>
         <div class="logo">
-          <img src="./icon.svg" alt="PrismioQR Logo">
+          <img src="./assets/icon.svg" alt="PrismioQR Logo">
         </div>
       </div>
     </div>
@@ -1427,20 +1870,47 @@
       enhanced performance, and improved user experience. We'll be back in 3-4 days!
     </p>
     
+    <!-- Simple QR Generator - Moved to Top -->
+    <div class="qr-generator">
+      <h3>🔧 Need a QR Code Now?</h3>
+      <p>While we're upgrading, you can still create basic QR codes here:</p>
+      <div class="qr-generator-form">
+        <div class="qr-input-group">
+          <label for="qr-input">Enter URL or Text:</label>
+          <input 
+            type="text" 
+            id="qr-input" 
+            placeholder="https://example.com or any text"
+            autocomplete="off"
+          >
+        </div>
+        <button class="qr-generate-btn" onclick="generateQR()">Generate QR Code</button>
+      </div>
+      <div class="qr-result" id="qr-result">
+        <div class="qr-code-display">
+          <canvas id="qr-canvas"></canvas>
+        </div>
+        <div>
+          <a href="#" class="qr-download-btn" id="qr-download-png" download="qrcode.png">Download PNG</a>
+          <a href="#" class="qr-download-btn" id="qr-download-svg" download="qrcode.svg">Download SVG</a>
+        </div>
+      </div>
+    </div>
+    
     <!-- Countdown Timer -->
     <div class="countdown-container">
       <div class="countdown-label">Estimated Return</div>
       <div class="countdown-timer" id="countdown">
         <div class="countdown-item">
-          <div class="countdown-number" id="days">3</div>
+          <div class="countdown-number" id="days">04</div>
           <div class="countdown-unit">Days</div>
         </div>
         <div class="countdown-item">
-          <div class="countdown-number" id="hours">0</div>
+          <div class="countdown-number" id="hours">00</div>
           <div class="countdown-unit">Hours</div>
         </div>
         <div class="countdown-item">
-          <div class="countdown-number" id="minutes">0</div>
+          <div class="countdown-number" id="minutes">00</div>
           <div class="countdown-unit">Minutes</div>
         </div>
       </div>
@@ -1494,11 +1964,15 @@
     
     <!-- Social Links -->
     <div class="social-links">
-      <a href="https://twitter.com/PrismioQR" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Twitter">
+      <a href="https://twitter.com/prismioqr" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Twitter">
         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
       </a>
-
-
+      <a href="https://www.linkedin.com/company/prismioqr" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <a href="https://github.com/batuhanilgarr/prismioqr" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      </a>
       <a href="https://www.producthunt.com/posts/prismioqr" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Product Hunt">
         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13.604 8.4h-3.405V12h3.405c.995 0 1.801-.806 1.801-1.801 0-.993-.805-1.799-1.801-1.799zM12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm1.604 14.4h-3.405V18H7.801V6h5.804c2.319 0 4.2 1.88 4.2 4.199 0 2.32-1.881 4.201-4.201 4.201z"/></svg>
       </a>
@@ -1506,30 +1980,62 @@
   </div>
   
   <script>
-    // Countdown Timer (3-4 days from now)
+    // Countdown Timer (Countdown to 4 days from page load)
+    const maintenanceStartTime = new Date().getTime();
+    const maintenanceDuration = 4 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
+    const targetEndTime = maintenanceStartTime + maintenanceDuration;
+    
     function updateCountdown() {
       const now = new Date().getTime();
-      // Set target to 4 days from now (adjust as needed)
-      const targetDate = new Date(now + (4 * 24 * 60 * 60 * 1000));
-      const distance = targetDate - now;
+      const distance = targetEndTime - now;
 
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
       // Ensure elements exist before updating
       const daysEl = document.getElementById('days');
       const hoursEl = document.getElementById('hours');
       const minutesEl = document.getElementById('minutes');
       
-      if (daysEl) daysEl.textContent = Math.max(0, days);
-      if (hoursEl) hoursEl.textContent = Math.max(0, hours);
-      if (minutesEl) minutesEl.textContent = Math.max(0, minutes);
+      if (daysEl) {
+        const oldDays = parseInt(daysEl.textContent) || 0;
+        daysEl.textContent = Math.max(0, days).toString().padStart(2, '0');
+        if (oldDays !== days) {
+          daysEl.style.animation = 'none';
+          setTimeout(() => {
+            daysEl.style.animation = 'numberPulse 0.5s ease-out';
+          }, 10);
+        }
+      }
+      
+      if (hoursEl) {
+        const oldHours = parseInt(hoursEl.textContent) || 0;
+        hoursEl.textContent = Math.max(0, hours).toString().padStart(2, '0');
+        if (oldHours !== hours) {
+          hoursEl.style.animation = 'none';
+          setTimeout(() => {
+            hoursEl.style.animation = 'numberPulse 0.5s ease-out';
+          }, 10);
+        }
+      }
+      
+      if (minutesEl) {
+        const oldMinutes = parseInt(minutesEl.textContent) || 0;
+        minutesEl.textContent = Math.max(0, minutes).toString().padStart(2, '0');
+        if (oldMinutes !== minutes) {
+          minutesEl.style.animation = 'none';
+          setTimeout(() => {
+            minutesEl.style.animation = 'numberPulse 0.5s ease-out';
+          }, 10);
+        }
+      }
 
       if (distance < 0) {
-        document.getElementById('days').textContent = '0';
-        document.getElementById('hours').textContent = '0';
-        document.getElementById('minutes').textContent = '0';
+        if (daysEl) daysEl.textContent = '00';
+        if (hoursEl) hoursEl.textContent = '00';
+        if (minutesEl) minutesEl.textContent = '00';
       }
     }
 
@@ -1572,6 +2078,115 @@
 
     // Start progress animation
     updateProgress();
+
+    // QR Code Generator
+    function generateQR() {
+      const input = document.getElementById('qr-input');
+      const result = document.getElementById('qr-result');
+      const canvas = document.getElementById('qr-canvas');
+      const downloadPng = document.getElementById('qr-download-png');
+      const downloadSvg = document.getElementById('qr-download-svg');
+      
+      if (!input || !result || !canvas) return;
+      
+      const text = input.value.trim();
+      
+      if (!text) {
+        alert('Please enter a URL or text to generate QR code');
+        return;
+      }
+      
+      // Show result container
+      result.classList.add('show');
+      
+      // Determine canvas size based on screen width
+      let qrSize = 256;
+      if (window.innerWidth <= 375) {
+        qrSize = 160;
+      } else if (window.innerWidth <= 768) {
+        qrSize = 200;
+      }
+      
+      // Generate QR code
+      QRCode.toCanvas(canvas, text, {
+        width: qrSize,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        },
+        errorCorrectionLevel: 'M'
+      }, function (error) {
+        if (error) {
+          console.error('QR Code generation error:', error);
+          alert('Error generating QR code. Please try again.');
+          result.classList.remove('show');
+          return;
+        }
+        
+        // Track QR generation
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'qr_generated_maintenance', {
+            'event_category': 'QR Generator',
+            'event_label': 'Maintenance Page QR Generation'
+          });
+        }
+        
+        // Setup download buttons
+        canvas.toBlob(function(blob) {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            downloadPng.href = url;
+            downloadPng.onclick = function(e) {
+              e.preventDefault();
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'qrcode.png';
+              a.click();
+              URL.revokeObjectURL(url);
+            };
+          }
+        }, 'image/png');
+        
+        // Generate SVG
+        QRCode.toString(text, {
+          type: 'svg',
+          width: qrSize,
+          margin: 2,
+          color: {
+            dark: '#000000',
+            light: '#FFFFFF'
+          },
+          errorCorrectionLevel: 'M'
+        }, function (err, svgString) {
+          if (!err && svgString) {
+            const svgBlob = new Blob([svgString], { type: 'image/svg+xml' });
+            const svgUrl = URL.createObjectURL(svgBlob);
+            downloadSvg.href = svgUrl;
+            downloadSvg.onclick = function(e) {
+              e.preventDefault();
+              const a = document.createElement('a');
+              a.href = svgUrl;
+              a.download = 'qrcode.svg';
+              a.click();
+              URL.revokeObjectURL(svgUrl);
+            };
+          }
+        });
+      });
+    }
+    
+    // Allow Enter key to generate QR
+    document.addEventListener('DOMContentLoaded', function() {
+      const qrInput = document.getElementById('qr-input');
+      if (qrInput) {
+        qrInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            generateQR();
+          }
+        });
+      }
+    });
 
     // Track time spent on maintenance page
     const startTime = Date.now();
