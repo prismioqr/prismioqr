@@ -90,7 +90,33 @@
   </script>
   
   <!-- QR Code Library -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" onload="window.qrcodeLoaded = true;"></script>
+  <script>
+    // Load QRCode library dynamically
+    (function() {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+      script.async = false;
+      script.defer = false;
+      script.onload = function() {
+        window.qrcodeLoaded = true;
+        console.log('QRCode library loaded successfully');
+      };
+      script.onerror = function() {
+        console.error('Failed to load QRCode library');
+        // Try alternative CDN
+        const altScript = document.createElement('script');
+        altScript.src = 'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js';
+        altScript.async = false;
+        altScript.defer = false;
+        altScript.onload = function() {
+          window.qrcodeLoaded = true;
+          console.log('QRCode library loaded from alternative CDN');
+        };
+        document.head.appendChild(altScript);
+      };
+      document.head.appendChild(script);
+    })();
+  </script>
   
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GGN0HTKD2T"></script>
@@ -399,7 +425,6 @@
       position: relative;
       z-index: 1;
       object-fit: contain;
-      filter: brightness(0) invert(1);
       animation: logoFloat 3s ease-in-out infinite;
     }
 
@@ -2083,8 +2108,9 @@
     function generateQR() {
       // Check if QRCode library is loaded
       if (typeof QRCode === 'undefined' || typeof QRCode.toCanvas === 'undefined') {
-        alert('QR Code library is loading. Please wait a moment and try again.');
-        console.error('QRCode library not loaded yet');
+        waitForQRCode(function() {
+          generateQR();
+        });
         return;
       }
       
@@ -2213,15 +2239,23 @@
       });
     }
     
-    // Wait for QRCode library to load
-    function waitForQRCode(callback) {
-      if (typeof QRCode !== 'undefined' && typeof QRCode.toCanvas !== 'undefined') {
-        callback();
-      } else {
-        setTimeout(function() {
-          waitForQRCode(callback);
-        }, 100);
+    // Wait for QRCode library to load with timeout
+    function waitForQRCode(callback, maxAttempts) {
+      maxAttempts = maxAttempts || 50; // 5 seconds max (50 * 100ms)
+      let attempts = 0;
+      
+      function check() {
+        attempts++;
+        if (typeof QRCode !== 'undefined' && typeof QRCode.toCanvas !== 'undefined') {
+          callback();
+        } else if (attempts < maxAttempts) {
+          setTimeout(check, 100);
+        } else {
+          alert('QR Code library failed to load. Please refresh the page and try again.');
+          console.error('QRCode library loading timeout after', attempts * 100, 'ms');
+        }
       }
+      check();
     }
     
     // Allow Enter key to generate QR
