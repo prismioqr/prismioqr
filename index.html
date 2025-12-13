@@ -93,96 +93,26 @@
     });
   </script>
   
-  <!-- QR Code Library - Multiple CDN fallbacks with correct paths -->
+  <!-- QR Code Library - qrcodejs (working CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    (function() {
-      let loaded = false;
-      const cdns = [
-        // Try esm.sh (more reliable)
-        'https://esm.sh/qrcode@1.5.3/build/qrcode.min.js',
-        // Try unpkg with different paths
-        'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js',
-        'https://unpkg.com/qrcode@1.5.3/lib/qrcode.min.js',
-        // Try jsdelivr with different paths
-        'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
-        'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/lib/qrcode.min.js',
-        // Try latest versions
-        'https://unpkg.com/qrcode@latest/build/qrcode.min.js',
-        'https://cdn.jsdelivr.net/npm/qrcode@latest/build/qrcode.min.js',
-        // Alternative library: qrcodejs
-        'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js',
-        'https://unpkg.com/qrcodejs@1.0.0/qrcode.min.js'
-      ];
-      
-      function tryLoadCDN(index) {
-        if (loaded || index >= cdns.length) {
-          if (!loaded) {
-            console.error('All CDN attempts failed. Using inline QR code generator...');
-            // Load inline fallback QR code generator
-            loadInlineQRGenerator();
-          }
-          return;
-        }
-        
-        const script = document.createElement('script');
-        script.src = cdns[index];
-        script.async = false;
-        script.defer = false;
-        
-        script.onload = function() {
-          // Check for different library names
-          if (typeof QRCode !== 'undefined') {
-            loaded = true;
-            window.qrcodeLoaded = true;
-            window.QRCodeLib = QRCode;
-            console.log('QRCode library loaded from:', cdns[index]);
-          } else if (typeof qrcode !== 'undefined') {
-            // qrcodejs uses lowercase
-            loaded = true;
-            window.qrcodeLoaded = true;
-            window.QRCodeLib = qrcode;
-            console.log('QRCode library (qrcodejs) loaded from:', cdns[index]);
-          } else {
-            // Library loaded but QRCode not defined, try next
-            tryLoadCDN(index + 1);
-          }
+    // Fallback to alternative CDN if primary fails
+    window.addEventListener('load', function() {
+      if (typeof QRCode === 'undefined') {
+        console.warn('Primary CDN failed, trying alternative...');
+        const altScript = document.createElement('script');
+        altScript.src = 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
+        altScript.onload = function() {
+          console.log('QRCode library loaded from alternative CDN');
         };
-        
-        script.onerror = function() {
-          console.warn('CDN failed:', cdns[index], '- trying next...');
-          tryLoadCDN(index + 1);
+        altScript.onerror = function() {
+          console.error('All CDN attempts failed. QR code generation may not work.');
         };
-        
-        // Add timeout
-        setTimeout(function() {
-          if (!loaded && script.parentNode) {
-            script.parentNode.removeChild(script);
-            tryLoadCDN(index + 1);
-          }
-        }, 5000);
-        
-        document.head.appendChild(script);
+        document.head.appendChild(altScript);
+      } else {
+        console.log('QRCode library (qrcodejs) loaded successfully');
       }
-      
-      // Inline QR code generator fallback (simple implementation)
-      function loadInlineQRGenerator() {
-        console.log('Loading inline QR code generator...');
-        // We'll use a simple canvas-based approach
-        window.QRCodeLib = {
-          toCanvas: function(canvas, text, options, callback) {
-            // Simple fallback - will be implemented if needed
-            if (callback) callback(new Error('QR Code library not available'));
-          },
-          toString: function(text, options, callback) {
-            if (callback) callback(new Error('QR Code library not available'));
-          }
-        };
-        window.qrcodeLoaded = false;
-      }
-      
-      // Start loading immediately
-      tryLoadCDN(0);
-    })();
+    });
   </script>
   
   <!-- Google Analytics -->
@@ -948,10 +878,25 @@
       margin-bottom: 16px;
     }
 
-    .qr-code-display canvas {
+    .qr-code-display canvas,
+    .qr-code-display img {
       border-radius: 8px;
       background: #fff;
       padding: 12px;
+      max-width: 100%;
+      height: auto;
+    }
+    
+    #qr-code-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    #qr-code-container canvas,
+    #qr-code-container img {
+      border-radius: 8px;
+      background: #fff;
       max-width: 100%;
       height: auto;
     }
@@ -1472,7 +1417,8 @@
         padding: 16px;
       }
       
-      .qr-code-display canvas {
+      .qr-code-display canvas,
+      .qr-code-display img {
         max-width: 200px;
         height: auto;
       }
@@ -1697,9 +1643,10 @@
         padding: 14px;
       }
       
-      .qr-code-display canvas {
-        width: 180px !important;
-        height: 180px !important;
+      .qr-code-display canvas,
+      .qr-code-display img {
+        max-width: 180px;
+        height: auto;
       }
       
       .qr-download-btn {
@@ -1792,7 +1739,8 @@
         margin-bottom: 24px;
       }
       
-      .qr-code-display canvas {
+      .qr-code-display canvas,
+      .qr-code-display img {
         max-width: 180px;
         height: auto;
       }
@@ -1897,7 +1845,8 @@
         padding: 10px;
       }
       
-      .qr-code-display canvas {
+      .qr-code-display canvas,
+      .qr-code-display img {
         max-width: 140px;
         height: auto;
       }
@@ -1980,7 +1929,7 @@
       </div>
       <div class="qr-result" id="qr-result">
         <div class="qr-code-display">
-          <canvas id="qr-canvas"></canvas>
+          <div id="qr-canvas"></div>
         </div>
         <div>
           <a href="#" class="qr-download-btn" id="qr-download-png" download="qrcode.png">Download PNG</a>
@@ -2171,11 +2120,12 @@
     // Start progress animation
     updateProgress();
 
-    // QR Code Generator
+    // QR Code Generator - Using qrcodejs library
+    let qrCodeInstance = null;
+    
     function generateQR() {
       // Check if QRCode library is loaded
-      const QRCodeLib = window.QRCodeLib || window.QRCode || (typeof QRCode !== 'undefined' ? QRCode : null);
-      if (!QRCodeLib || typeof QRCodeLib.toCanvas === 'undefined') {
+      if (typeof QRCode === 'undefined') {
         waitForQRCode(function() {
           generateQR();
         });
@@ -2184,11 +2134,11 @@
       
       const input = document.getElementById('qr-input');
       const result = document.getElementById('qr-result');
-      const canvas = document.getElementById('qr-canvas');
+      const canvasContainer = document.getElementById('qr-canvas');
       const downloadPng = document.getElementById('qr-download-png');
       const downloadSvg = document.getElementById('qr-download-svg');
       
-      if (!input || !result || !canvas) return;
+      if (!input || !result || !canvasContainer) return;
       
       const text = input.value.trim();
       
@@ -2230,7 +2180,10 @@
       // Show result container
       result.classList.add('show');
       
-      // Determine canvas size based on screen width
+      // Clear previous QR code
+      canvasContainer.innerHTML = '';
+      
+      // Determine QR size based on screen width
       let qrSize = 256;
       if (window.innerWidth <= 375) {
         qrSize = 160;
@@ -2238,23 +2191,21 @@
         qrSize = 200;
       }
       
-      // Generate QR code
-      const QRCodeLib = window.QRCodeLib || window.QRCode || QRCode;
-      QRCodeLib.toCanvas(canvas, text, {
-        width: qrSize,
-        margin: 2,
-        color: {
-          dark: '#000000',
-          light: '#FFFFFF'
-        },
-        errorCorrectionLevel: 'M'
-      }, function (error) {
-        if (error) {
-          console.error('QR Code generation error:', error);
-          alert('Error generating QR code. Please try again.');
-          result.classList.remove('show');
-          return;
-        }
+      // Create a container div for QR code
+      const qrDiv = document.createElement('div');
+      qrDiv.id = 'qr-code-container';
+      canvasContainer.appendChild(qrDiv);
+      
+      try {
+        // Generate QR code using qrcodejs
+        qrCodeInstance = new QRCode(qrDiv, {
+          text: text,
+          width: qrSize,
+          height: qrSize,
+          colorDark: '#000000',
+          colorLight: '#FFFFFF',
+          correctLevel: QRCode.CorrectLevel.M
+        });
         
         // Track QR generation
         if (typeof gtag !== 'undefined') {
@@ -2264,35 +2215,73 @@
           });
         }
         
-        // Setup download buttons
-        canvas.toBlob(function(blob) {
-          if (blob) {
-            const url = URL.createObjectURL(blob);
-            downloadPng.href = url;
-            downloadPng.onclick = function(e) {
+        // Wait for QR code to render, then setup downloads
+        setTimeout(function() {
+          // Get the canvas or img element from qrcodejs
+          const qrImg = qrDiv.querySelector('img');
+          const qrCanvas = qrDiv.querySelector('canvas');
+          
+          if (qrCanvas) {
+            // PNG download from canvas
+            qrCanvas.toBlob(function(blob) {
+              if (blob) {
+                const url = URL.createObjectURL(blob);
+                downloadPng.href = url;
+                downloadPng.onclick = function(e) {
+                  e.preventDefault();
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = fileName + '.png';
+                  a.click();
+                  URL.revokeObjectURL(url);
+                };
+              }
+            }, 'image/png');
+            
+            // SVG download - convert canvas to SVG
+            const svgString = '<svg xmlns="http://www.w3.org/2000/svg" width="' + qrSize + '" height="' + qrSize + '">' +
+              '<foreignObject width="100%" height="100%">' +
+              '<div xmlns="http://www.w3.org/1999/xhtml">' +
+              '<img src="' + qrCanvas.toDataURL('image/png') + '" width="' + qrSize + '" height="' + qrSize + '"/>' +
+              '</div></foreignObject></svg>';
+            
+            const svgBlob = new Blob([svgString], { type: 'image/svg+xml' });
+            const svgUrl = URL.createObjectURL(svgBlob);
+            downloadSvg.href = svgUrl;
+            downloadSvg.onclick = function(e) {
               e.preventDefault();
               const a = document.createElement('a');
-              a.href = url;
-              a.download = fileName + '.png';
+              a.href = svgUrl;
+              a.download = fileName + '.svg';
               a.click();
-              URL.revokeObjectURL(url);
+              URL.revokeObjectURL(svgUrl);
             };
-          }
-        }, 'image/png');
-        
-        // Generate SVG
-        const QRCodeLib = window.QRCodeLib || window.QRCode || QRCode;
-        QRCodeLib.toString(text, {
-          type: 'svg',
-          width: qrSize,
-          margin: 2,
-          color: {
-            dark: '#000000',
-            light: '#FFFFFF'
-          },
-          errorCorrectionLevel: 'M'
-        }, function (err, svgString) {
-          if (!err && svgString) {
+          } else if (qrImg) {
+            // If img element, convert to canvas first
+            const canvas = document.createElement('canvas');
+            canvas.width = qrSize;
+            canvas.height = qrSize;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(qrImg, 0, 0);
+            
+            canvas.toBlob(function(blob) {
+              if (blob) {
+                const url = URL.createObjectURL(blob);
+                downloadPng.href = url;
+                downloadPng.onclick = function(e) {
+                  e.preventDefault();
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = fileName + '.png';
+                  a.click();
+                  URL.revokeObjectURL(url);
+                };
+              }
+            }, 'image/png');
+            
+            // SVG
+            const svgString = '<svg xmlns="http://www.w3.org/2000/svg" width="' + qrSize + '" height="' + qrSize + '">' +
+              '<image href="' + qrImg.src + '" width="' + qrSize + '" height="' + qrSize + '"/></svg>';
             const svgBlob = new Blob([svgString], { type: 'image/svg+xml' });
             const svgUrl = URL.createObjectURL(svgBlob);
             downloadSvg.href = svgUrl;
@@ -2305,8 +2294,13 @@
               URL.revokeObjectURL(svgUrl);
             };
           }
-        });
-      });
+        }, 100);
+        
+      } catch (error) {
+        console.error('QR Code generation error:', error);
+        alert('Error generating QR code. Please try again.');
+        result.classList.remove('show');
+      }
     }
     
     // Wait for QRCode library to load with timeout
@@ -2316,8 +2310,7 @@
       
       function check() {
         attempts++;
-        const QRCodeLib = window.QRCodeLib || window.QRCode || (typeof QRCode !== 'undefined' ? QRCode : null);
-        if (QRCodeLib && typeof QRCodeLib.toCanvas !== 'undefined') {
+        if (typeof QRCode !== 'undefined') {
           callback();
         } else if (attempts < maxAttempts) {
           setTimeout(check, 100);
