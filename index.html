@@ -924,6 +924,262 @@
       transform: translateY(-2px);
     }
 
+    /* QR Code Puzzle Game */
+    .qr-game {
+      background: 
+        linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(6, 182, 212, 0.15) 100%),
+        rgba(15, 15, 25, 0.6);
+      border: 2px solid rgba(99, 102, 241, 0.4);
+      border-radius: 24px;
+      padding: 36px;
+      margin-bottom: 36px;
+      text-align: center;
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+        0 0 40px rgba(99, 102, 241, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .qr-game::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.1) 50%, transparent 70%);
+      animation: techScan 8s linear infinite;
+      pointer-events: none;
+    }
+
+    .qr-game h3 {
+      color: #fff;
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+    }
+
+    .qr-game p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .qr-game-container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .qr-game-display {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(99, 102, 241, 0.3);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: inline-block;
+      min-width: 250px;
+      min-height: 250px;
+    }
+
+    #qr-game-code {
+      display: inline-block;
+      min-height: 200px;
+      min-width: 200px;
+      text-align: center;
+    }
+
+    .qr-game-loading {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      padding: 40px;
+      text-align: center;
+    }
+
+    #qr-game-code canvas,
+    #qr-game-code img {
+      border-radius: 8px;
+      background: #fff;
+      padding: 12px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .qr-game-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 400px;
+      margin: 0 auto 16px;
+    }
+
+    .qr-game-input-group input {
+      background: rgba(15, 15, 25, 0.8);
+      border: 2px solid rgba(99, 102, 241, 0.4);
+      border-radius: 14px;
+      padding: 14px 18px;
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s;
+      font-family: 'Montserrat', 'Poppins', sans-serif;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .qr-game-input-group input:focus {
+      outline: none;
+      border-color: rgba(99, 102, 241, 0.8);
+      background: rgba(15, 15, 25, 0.9);
+      box-shadow: 
+        inset 0 2px 8px rgba(0, 0, 0, 0.3),
+        0 0 0 3px rgba(99, 102, 241, 0.2),
+        0 0 30px rgba(99, 102, 241, 0.4);
+    }
+
+    .qr-game-submit-btn {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+      background-size: 200% 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 16px 32px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.5),
+        0 0 0 0 rgba(99, 102, 241, 0);
+      font-family: 'Montserrat', 'Poppins', sans-serif;
+      position: relative;
+      z-index: 1;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .qr-game-submit-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 
+        0 10px 35px rgba(99, 102, 241, 0.6),
+        0 0 30px rgba(139, 92, 246, 0.5);
+      background-position: 100% 0;
+    }
+
+    .qr-game-score {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .qr-game-score strong {
+      color: #a5b4fc;
+      font-size: 1.2rem;
+    }
+
+    /* Success Popup */
+    .qr-game-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .qr-game-popup.show {
+      display: flex;
+    }
+
+    .qr-game-popup-content {
+      background: 
+        linear-gradient(135deg, rgba(15, 15, 25, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
+      border: 2px solid rgba(99, 102, 241, 0.4);
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 
+        0 25px 80px rgba(0, 0, 0, 0.6),
+        0 0 80px rgba(99, 102, 241, 0.3);
+      animation: popupSlideIn 0.4s ease-out;
+    }
+
+    @keyframes popupSlideIn {
+      from {
+        transform: scale(0.8) translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .qr-game-popup-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      animation: bounce 0.6s ease-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .qr-game-popup-content h3 {
+      color: #fff;
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .qr-game-popup-content p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1rem;
+      margin-bottom: 24px;
+    }
+
+    .qr-game-popup-btn {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+      border: none;
+      border-radius: 14px;
+      padding: 14px 32px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Montserrat', 'Poppins', sans-serif;
+    }
+
+    .qr-game-popup-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+    }
+
     /* Enhanced Progress Bar */
     .progress-container {
       margin: 28px 0;
@@ -1399,6 +1655,51 @@
         margin-bottom: 20px;
       }
       
+      .qr-game {
+        padding: 24px 20px;
+        margin-bottom: 32px;
+      }
+      
+      .qr-game h3 {
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+      }
+      
+      .qr-game p {
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+      }
+      
+      .qr-game-display {
+        padding: 16px;
+      }
+      
+      .qr-game-input-group {
+        max-width: 100%;
+      }
+      
+      .qr-game-input-group input {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+      }
+      
+      .qr-game-submit-btn {
+        padding: 14px 24px;
+        font-size: 0.9rem;
+      }
+      
+      .qr-game-popup-content {
+        padding: 30px 20px;
+      }
+      
+      .qr-game-popup-content h3 {
+        font-size: 1.5rem;
+      }
+      
+      .qr-game-popup-icon {
+        font-size: 3rem;
+      }
+      
       .qr-input-group label {
         font-size: 0.85rem;
       }
@@ -1627,6 +1928,47 @@
       .qr-generator p {
         font-size: 0.8rem;
         margin-bottom: 18px;
+      }
+      
+      .qr-game {
+        padding: 20px 16px;
+        margin-bottom: 28px;
+      }
+      
+      .qr-game h3 {
+        font-size: 1rem;
+        margin-bottom: 6px;
+      }
+      
+      .qr-game p {
+        font-size: 0.8rem;
+        margin-bottom: 18px;
+      }
+      
+      .qr-game-display {
+        padding: 12px;
+      }
+      
+      .qr-game-input-group input {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+      }
+      
+      .qr-game-submit-btn {
+        padding: 12px 20px;
+        font-size: 0.85rem;
+      }
+      
+      .qr-game-popup-content {
+        padding: 24px 16px;
+      }
+      
+      .qr-game-popup-content h3 {
+        font-size: 1.3rem;
+      }
+      
+      .qr-game-popup-icon {
+        font-size: 2.5rem;
       }
       
       .qr-input-group input {
@@ -1938,6 +2280,43 @@
       </div>
     </div>
     
+    <!-- QR Code Puzzle Game -->
+    <div class="qr-game">
+      <h3>🎮 QR Code Puzzle Challenge</h3>
+      <p><strong>Step 1:</strong> Look at the colorful QR code below<br>
+      <strong>Step 2:</strong> Scan it with your phone's camera<br>
+      <strong>Step 3:</strong> Enter the word you see in the input below</p>
+      <div class="qr-game-container">
+        <div class="qr-game-display" id="qr-game-display">
+          <div id="qr-game-code">
+            <div class="qr-game-loading">Loading QR code...</div>
+          </div>
+        </div>
+        <div class="qr-game-input-group">
+          <input 
+            type="text" 
+            id="qr-game-answer" 
+            placeholder="Enter the word from QR code"
+            autocomplete="off"
+          >
+          <button class="qr-game-submit-btn" onclick="checkGameAnswer()">Check Answer</button>
+        </div>
+        <div class="qr-game-score">
+          <span>Score: <strong id="qr-game-score">0</strong></span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Success Popup -->
+    <div class="qr-game-popup" id="qr-game-popup">
+      <div class="qr-game-popup-content">
+        <div class="qr-game-popup-icon">🎉</div>
+        <h3>Correct!</h3>
+        <p id="qr-game-popup-message">Great job! Here's your next challenge.</p>
+        <button class="qr-game-popup-btn" onclick="closeGamePopup()">Continue</button>
+      </div>
+    </div>
+    
     <!-- Countdown Timer -->
     <div class="countdown-container">
       <div class="countdown-label">Estimated Return</div>
@@ -2019,7 +2398,7 @@
   <script>
     // Countdown Timer (Countdown to 4 days from page load)
     const maintenanceStartTime = new Date().getTime();
-    const maintenanceDuration = 4 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
+    const maintenanceDuration = 2 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
     const targetEndTime = maintenanceStartTime + maintenanceDuration;
     
     function updateCountdown() {
@@ -2193,13 +2572,24 @@
       canvasContainer.appendChild(qrDiv);
       
       try {
-        // Generate QR code using qrcodejs
+        // Generate colorful QR code using qrcodejs
+        // Create gradient colors for QR code
+        const colors = [
+          { dark: '#6366f1', light: '#e0e7ff' }, // Indigo
+          { dark: '#8b5cf6', light: '#ede9fe' }, // Purple
+          { dark: '#06b6d4', light: '#cffafe' }, // Cyan
+          { dark: '#10b981', light: '#d1fae5' }, // Green
+          { dark: '#f59e0b', light: '#fef3c7' }, // Amber
+          { dark: '#ef4444', light: '#fee2e2' }, // Red
+        ];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        
         qrCodeInstance = new QRCode(qrDiv, {
           text: text,
           width: qrSize,
           height: qrSize,
-          colorDark: '#000000',
-          colorLight: '#FFFFFF',
+          colorDark: randomColor.dark,
+          colorLight: randomColor.light,
           correctLevel: QRCode.CorrectLevel.M
         });
         
@@ -2328,6 +2718,190 @@
               generateQR();
             });
           }
+        });
+      }
+    });
+
+    // QR Code Puzzle Game
+    const gameWords = [
+      'PRIVACY', 'QRCODE', 'GENERATOR', 'BROWSER', 'CLIENT', 'FREE', 
+      'SECURE', 'FAST', 'SIMPLE', 'EASY', 'TOOLS', 'TECH', 'CODE',
+      'WEB', 'APP', 'SAFE', 'TRUST', 'BUILD', 'CREATE', 'DESIGN',
+      'DEVELOP', 'LAUNCH', 'SHIP', 'GROW', 'LEARN', 'BUILD', 'MAKE'
+    ];
+    
+    let currentGameWord = '';
+    let gameScore = 0;
+    let gameQRInstance = null;
+    
+    const successMessages = [
+      'Excellent! You got it right!',
+      'Perfect! Well done!',
+      'Awesome! Keep going!',
+      'Great job! You\'re on fire!',
+      'Brilliant! You\'re crushing it!',
+      'Fantastic! Keep it up!',
+      'Outstanding! You\'re amazing!',
+      'Incredible! You\'re a pro!'
+    ];
+    
+    function initGame() {
+      if (typeof QRCode === 'undefined') {
+        waitForQRCode(function() {
+          initGame();
+        });
+        return;
+      }
+      
+      generateNewGameWord();
+      
+      // Allow Enter key to submit answer
+      const gameInput = document.getElementById('qr-game-answer');
+      if (gameInput) {
+        gameInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            checkGameAnswer();
+          }
+        });
+      }
+    }
+    
+    function generateNewGameWord() {
+      // Select random word
+      const randomIndex = Math.floor(Math.random() * gameWords.length);
+      currentGameWord = gameWords[randomIndex];
+      
+      // Generate QR code for the word
+      const gameCodeDiv = document.getElementById('qr-game-code');
+      if (!gameCodeDiv) return;
+      
+      // Show loading
+      gameCodeDiv.innerHTML = '<div class="qr-game-loading">Generating QR code...</div>';
+      
+      // Determine QR size
+      let qrSize = 200;
+      if (window.innerWidth <= 375) {
+        qrSize = 150;
+      } else if (window.innerWidth <= 768) {
+        qrSize = 180;
+      }
+      
+      // Colorful QR code
+      const colors = [
+        { dark: '#6366f1', light: '#e0e7ff' },
+        { dark: '#8b5cf6', light: '#ede9fe' },
+        { dark: '#06b6d4', light: '#cffafe' },
+        { dark: '#10b981', light: '#d1fae5' },
+        { dark: '#f59e0b', light: '#fef3c7' },
+        { dark: '#ef4444', light: '#fee2e2' },
+      ];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      
+      // Small delay to ensure DOM is ready
+      setTimeout(function() {
+        try {
+          gameCodeDiv.innerHTML = '';
+          gameQRInstance = new QRCode(gameCodeDiv, {
+            text: currentGameWord,
+            width: qrSize,
+            height: qrSize,
+            colorDark: randomColor.dark,
+            colorLight: randomColor.light,
+            correctLevel: QRCode.CorrectLevel.M
+          });
+          
+          // Ensure QR code is visible
+          const qrDisplay = document.getElementById('qr-game-display');
+          if (qrDisplay) {
+            qrDisplay.style.display = 'inline-block';
+          }
+        } catch (error) {
+          console.error('Game QR generation error:', error);
+          gameCodeDiv.innerHTML = '<div class="qr-game-loading" style="color: #ef4444;">Error generating QR code. Please refresh.</div>';
+        }
+      }, 100);
+      
+      // Clear input
+      const gameInput = document.getElementById('qr-game-answer');
+      if (gameInput) {
+        gameInput.value = '';
+        gameInput.focus();
+      }
+    }
+    
+    function checkGameAnswer() {
+      const gameInput = document.getElementById('qr-game-answer');
+      if (!gameInput) return;
+      
+      const userAnswer = gameInput.value.trim().toUpperCase();
+      
+      if (!userAnswer) {
+        alert('Please enter an answer!');
+        return;
+      }
+      
+      if (userAnswer === currentGameWord) {
+        // Correct answer
+        gameScore++;
+        updateGameScore();
+        
+        // Show success popup
+        const popup = document.getElementById('qr-game-popup');
+        const popupMessage = document.getElementById('qr-game-popup-message');
+        
+        if (popup && popupMessage) {
+          const randomMessage = successMessages[Math.floor(Math.random() * successMessages.length)];
+          popupMessage.textContent = randomMessage;
+          popup.classList.add('show');
+        }
+        
+        // Track game completion
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'qr_game_completed', {
+            'event_category': 'QR Game',
+            'event_label': 'Correct Answer',
+            'value': gameScore
+          });
+        }
+      } else {
+        // Wrong answer
+        alert('Not quite! Try again. Hint: The word is related to technology/privacy.');
+        gameInput.focus();
+        gameInput.select();
+      }
+    }
+    
+    function closeGamePopup() {
+      const popup = document.getElementById('qr-game-popup');
+      if (popup) {
+        popup.classList.remove('show');
+      }
+      
+      // Generate new word
+      setTimeout(function() {
+        generateNewGameWord();
+      }, 300);
+    }
+    
+    function updateGameScore() {
+      const scoreElement = document.getElementById('qr-game-score');
+      if (scoreElement) {
+        scoreElement.textContent = gameScore;
+      }
+    }
+    
+    // Initialize game when page loads
+    window.addEventListener('load', function() {
+      // Wait for QRCode library to be ready
+      if (typeof QRCode !== 'undefined') {
+        setTimeout(function() {
+          initGame();
+        }, 500);
+      } else {
+        waitForQRCode(function() {
+          setTimeout(function() {
+            initGame();
+          }, 500);
         });
       }
     });
