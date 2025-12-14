@@ -885,6 +885,23 @@
       padding: 12px;
       max-width: 100%;
       height: auto;
+      position: relative;
+    }
+    
+    /* Gradient overlay for QR codes */
+    .qr-code-display::after {
+      content: '';
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 48px);
+      height: calc(100% - 48px);
+      border-radius: 8px;
+      pointer-events: none;
+      opacity: 0.3;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.4) 0%, rgba(139, 92, 246, 0.4) 50%, rgba(6, 182, 212, 0.4) 100%);
+      mix-blend-mode: multiply;
     }
     
     #qr-code-container {
@@ -986,16 +1003,21 @@
       border-radius: 16px;
       padding: 24px;
       margin-bottom: 24px;
-      display: inline-block;
+      display: block !important;
       min-width: 250px;
       min-height: 250px;
+      visibility: visible !important;
+      opacity: 1 !important;
+      text-align: center;
     }
 
     #qr-game-code {
-      display: inline-block;
+      display: block !important;
       min-height: 200px;
       min-width: 200px;
       text-align: center;
+      visibility: visible !important;
+      opacity: 1 !important;
     }
 
     .qr-game-loading {
@@ -2398,7 +2420,7 @@
   <script>
     // Countdown Timer (Countdown to 4 days from page load)
     const maintenanceStartTime = new Date().getTime();
-    const maintenanceDuration = 2 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
+    const maintenanceDuration = 1 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
     const targetEndTime = maintenanceStartTime + maintenanceDuration;
     
     function updateCountdown() {
@@ -2497,6 +2519,67 @@
 
     // QR Code Generator - Using qrcodejs library
     let qrCodeInstance = null;
+    let currentGradient = null;
+    
+    // Apply gradient effect to QR code canvas (simple and fast)
+    function applyGradientToCanvas(canvas, gradientColors) {
+      const ctx = canvas.getContext('2d');
+      
+      // Save original QR code
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx.drawImage(canvas, 0, 0);
+      
+      // Create beautiful gradient
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, gradientColors[0]);
+      gradient.addColorStop(0.5, gradientColors[1]);
+      gradient.addColorStop(1, gradientColors[2] || gradientColors[1]);
+      
+      // Clear canvas and draw gradient
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Apply QR code pattern using multiply blend mode
+      ctx.globalCompositeOperation = 'multiply';
+      ctx.drawImage(tempCanvas, 0, 0);
+      
+      // Enhance with overlay
+      ctx.globalCompositeOperation = 'overlay';
+      ctx.fillStyle = gradient;
+      ctx.globalAlpha = 0.3;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Reset
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1.0;
+    }
+    
+    // Helper function to interpolate between two colors
+    function interpolateColor(color1, color2, factor) {
+      const hex1 = color1.replace('#', '');
+      const hex2 = color2.replace('#', '');
+      
+      const r1 = parseInt(hex1.substr(0, 2), 16);
+      const g1 = parseInt(hex1.substr(2, 2), 16);
+      const b1 = parseInt(hex1.substr(4, 2), 16);
+      
+      const r2 = parseInt(hex2.substr(0, 2), 16);
+      const g2 = parseInt(hex2.substr(2, 2), 16);
+      const b2 = parseInt(hex2.substr(4, 2), 16);
+      
+      const r = Math.round(r1 + (r2 - r1) * factor);
+      const g = Math.round(g1 + (g2 - g1) * factor);
+      const b = Math.round(b1 + (b2 - b1) * factor);
+      
+      return '#' + [r, g, b].map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      }).join('');
+    }
     
     function generateQR() {
       // Check if QRCode library is loaded
@@ -2572,24 +2655,24 @@
       canvasContainer.appendChild(qrDiv);
       
       try {
-        // Generate colorful QR code using qrcodejs
-        // Create gradient colors for QR code
-        const colors = [
-          { dark: '#6366f1', light: '#e0e7ff' }, // Indigo
-          { dark: '#8b5cf6', light: '#ede9fe' }, // Purple
-          { dark: '#06b6d4', light: '#cffafe' }, // Cyan
-          { dark: '#10b981', light: '#d1fae5' }, // Green
-          { dark: '#f59e0b', light: '#fef3c7' }, // Amber
-          { dark: '#ef4444', light: '#fee2e2' }, // Red
+        // Generate colorful QR code with gradient effect
+        // Create gradient color combinations
+        const gradientColors = [
+          { dark: '#6366f1', light: '#8b5cf6', gradient: ['#6366f1', '#8b5cf6', '#a855f7'] }, // Indigo to Purple
+          { dark: '#06b6d4', light: '#10b981', gradient: ['#06b6d4', '#10b981', '#14b8a6'] }, // Cyan to Green
+          { dark: '#8b5cf6', light: '#ec4899', gradient: ['#8b5cf6', '#ec4899', '#f472b6'] }, // Purple to Pink
+          { dark: '#f59e0b', light: '#ef4444', gradient: ['#f59e0b', '#ef4444', '#f97316'] }, // Amber to Red
+          { dark: '#6366f1', light: '#06b6d4', gradient: ['#6366f1', '#3b82f6', '#06b6d4'] }, // Indigo to Cyan
+          { dark: '#10b981', light: '#06b6d4', gradient: ['#10b981', '#14b8a6', '#06b6d4'] }, // Green to Cyan
         ];
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        const selectedGradient = gradientColors[Math.floor(Math.random() * gradientColors.length)];
         
         qrCodeInstance = new QRCode(qrDiv, {
           text: text,
           width: qrSize,
           height: qrSize,
-          colorDark: randomColor.dark,
-          colorLight: randomColor.light,
+          colorDark: selectedGradient.dark,
+          colorLight: selectedGradient.light,
           correctLevel: QRCode.CorrectLevel.M
         });
         
@@ -2601,13 +2684,21 @@
           });
         }
         
-        // Wait for QR code to render, then setup downloads
+        // Wait for QR code to render, then apply gradient and setup downloads
         setTimeout(function() {
           // Get the canvas or img element from qrcodejs
           const qrImg = qrDiv.querySelector('img');
           const qrCanvas = qrDiv.querySelector('canvas');
           
           if (qrCanvas) {
+            // Store gradient for later use
+            currentGradient = selectedGradient.gradient;
+            
+            // Apply gradient effect to canvas
+            setTimeout(function() {
+              applyGradientToCanvas(qrCanvas, selectedGradient.gradient);
+            }, 100);
+            
             // PNG download from canvas
             qrCanvas.toBlob(function(blob) {
               if (blob) {
@@ -2746,13 +2837,16 @@
     ];
     
     function initGame() {
+      console.log('initGame called');
       if (typeof QRCode === 'undefined') {
+        console.log('QRCode undefined, waiting...');
         waitForQRCode(function() {
           initGame();
         });
         return;
       }
       
+      console.log('Generating first game word...');
       generateNewGameWord();
       
       // Allow Enter key to submit answer
@@ -2767,14 +2861,20 @@
     }
     
     function generateNewGameWord() {
+      console.log('generateNewGameWord called');
       // Select random word
       const randomIndex = Math.floor(Math.random() * gameWords.length);
       currentGameWord = gameWords[randomIndex];
+      console.log('Selected word:', currentGameWord);
       
       // Generate QR code for the word
       const gameCodeDiv = document.getElementById('qr-game-code');
-      if (!gameCodeDiv) return;
+      if (!gameCodeDiv) {
+        console.error('qr-game-code div not found!');
+        return;
+      }
       
+      console.log('QR code div found, generating QR...');
       // Show loading
       gameCodeDiv.innerHTML = '<div class="qr-game-loading">Generating QR code...</div>';
       
@@ -2800,6 +2900,14 @@
       // Small delay to ensure DOM is ready
       setTimeout(function() {
         try {
+          if (typeof QRCode === 'undefined') {
+            gameCodeDiv.innerHTML = '<div class="qr-game-loading">Waiting for QR library...</div>';
+            waitForQRCode(function() {
+              generateNewGameWord();
+            });
+            return;
+          }
+          
           gameCodeDiv.innerHTML = '';
           gameQRInstance = new QRCode(gameCodeDiv, {
             text: currentGameWord,
@@ -2814,7 +2922,27 @@
           const qrDisplay = document.getElementById('qr-game-display');
           if (qrDisplay) {
             qrDisplay.style.display = 'inline-block';
+            qrDisplay.style.visibility = 'visible';
+            qrDisplay.style.opacity = '1';
           }
+          
+          // Ensure QR code container is visible
+          gameCodeDiv.style.display = 'block';
+          gameCodeDiv.style.visibility = 'visible';
+          gameCodeDiv.style.opacity = '1';
+          
+          // Verify QR code was created
+          setTimeout(function() {
+            const qrCanvas = gameCodeDiv.querySelector('canvas');
+            const qrImg = gameCodeDiv.querySelector('img');
+            if (!qrCanvas && !qrImg) {
+              console.error('QR code not created, retrying...');
+              generateNewGameWord();
+            } else {
+              console.log('QR code created successfully:', currentGameWord);
+            }
+          }, 500);
+          
         } catch (error) {
           console.error('Game QR generation error:', error);
           gameCodeDiv.innerHTML = '<div class="qr-game-loading" style="color: #ef4444;">Error generating QR code. Please refresh.</div>';
@@ -2891,19 +3019,37 @@
     }
     
     // Initialize game when page loads
-    window.addEventListener('load', function() {
-      // Wait for QRCode library to be ready
+    function startGame() {
       if (typeof QRCode !== 'undefined') {
-        setTimeout(function() {
-          initGame();
-        }, 500);
+        console.log('QRCode library loaded, initializing game...');
+        initGame();
       } else {
+        console.log('Waiting for QRCode library...');
         waitForQRCode(function() {
-          setTimeout(function() {
-            initGame();
-          }, 500);
+          console.log('QRCode library ready, initializing game...');
+          initGame();
         });
       }
+    }
+    
+    // Try to start game immediately if DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(startGame, 1000);
+      });
+    } else {
+      setTimeout(startGame, 1000);
+    }
+    
+    // Also try on window load as backup
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        const gameCodeDiv = document.getElementById('qr-game-code');
+        if (gameCodeDiv && !gameCodeDiv.querySelector('canvas') && !gameCodeDiv.querySelector('img')) {
+          console.log('QR code not found on load, retrying...');
+          startGame();
+        }
+      }, 2000);
     });
 
     // Track time spent on maintenance page
